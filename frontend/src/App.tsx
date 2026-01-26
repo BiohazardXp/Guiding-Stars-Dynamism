@@ -9,6 +9,8 @@ import Dashboard from './pages/Dashboard';
 import Home from './pages/Home'; 
 import About from './pages/About';
 import Contact from './pages/Contact';
+import Graduation from './pages/Graduation';
+import Team from './pages/Team';
 
 function ProtectedRoute({ children }: { children: JSX.Element }) {
   const context = useContext(AuthContext);
@@ -36,6 +38,12 @@ function App() {
 
         {/* Public Contact Page */}
         <Route path="/contact" element={<Contact />} />
+
+        {/* Public Graduation Page */}
+        <Route path="/graduation" element={<Graduation />} />
+
+        {/* Public Team Page */}
+        <Route path="/team" element={<Team />} />
 
         <Route
           path="/dashboard"
