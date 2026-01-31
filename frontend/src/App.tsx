@@ -1,18 +1,10 @@
 // src/App.tsx
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import React, { type JSX } from 'react';
+import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { AuthContext } from './context/AuthContext';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
-import Sidebar from './components/Sidebar';
-import Mentors from './pages/Mentors';
-import Mentees from './pages/Mentees';
-import Matches from './pages/Matches';
-import Progress from './pages/Progress';
-import Activate from './pages/Activate';
-import MenteeLogin from './pages/MenteeLogin';
-import MenteeDashboard from './pages/MenteeDashboard';
-import ApplyPage from './pages/ApplyPage';
 
 function ProtectedRoute({ children }: { children: JSX.Element }) {
   const context = useContext(AuthContext);
@@ -49,74 +41,19 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* Public routes - no sidebar */}
-        <Route path="/apply" element={<ApplyPage />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/activate/:token" element={<Activate />} />
-        <Route path="/mentee/login" element={<MenteeLogin />} />
-        <Route path="/mentee/dashboard" element={<MenteeDashboard />} />
         
-        {/* Protected routes - with sidebar */}
         <Route
           path="/dashboard"
           element={
             <ProtectedRoute>
-              <ProtectedLayout>
-                <Dashboard />
-              </ProtectedLayout>
+              <Dashboard />
             </ProtectedRoute>
           }
         />
 
-        <Route
-          path="/mentors"
-          element={
-            <ProtectedRoute>
-              <ProtectedLayout>
-                <Mentors />
-              </ProtectedLayout>
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/mentees"
-          element={
-            <ProtectedRoute>
-              <ProtectedLayout>
-                <Mentees />
-              </ProtectedLayout>
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/matches"
-          element={
-            <ProtectedRoute>
-              <ProtectedLayout>
-                <Matches />
-              </ProtectedLayout>
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/progress"
-          element={
-            <ProtectedRoute>
-              <ProtectedLayout>
-                <Progress />
-              </ProtectedLayout>
-            </ProtectedRoute>
-          }
-        />
-
-        {/* Redirect root to dashboard */}
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
-        
-        {/* 404 fallback */}
-        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        {/* Placeholder for future pages */}
+        <Route path="/" element={<Navigate to="/login" replace />} />
       </Routes>
     </Router>
   );
