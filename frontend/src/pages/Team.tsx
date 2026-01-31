@@ -1,21 +1,21 @@
 // src/pages/Team.tsx
-import React from 'react';
+//import React from 'react';
 import { Link } from 'react-router-dom';
 
 // Import images (adjust paths based on your public/img folder)
-import horizontalLogo from '../../public/img/HORIZONTAL.png';
-import horizontalLogo2 from '../../public/img/HORIZONTAL (2).png';
-import topBanner from '../../public/img/Top-Bunner-1.jpg';
+const horizontalLogo = ".../img/HORIZONTAL.png";
+const horizontalLogo2 = "./img/HORIZONTAL (2).png";
+const topBanner = "./img/Top-Bunner-1.jpg";
 
 // Team member images (add all from your img/TEAM folder)
-import twaambo from '../../public/img/TEAM/twaambo_optimized.png';
-import lisa from '../../public/img/TEAM/Lisa_optimized.png';
-import nangoma from '../../public/img/TEAM/nangoma_optimized.png';
-import grace from '../../public/img/TEAM/grace_optimized.png';
-import rachael from '../../public/img/TEAM/rachael_optimed.png';
-import edward from '../../public/img/TEAM/edward_optimized.png';
-import pancrecious from '../../public/img/TEAM/pancrecious_optimized.png';
-import solomon from '../../public/img/TEAM/solomon_optimized.png';
+const twaambo = "./img/TEAM/twaambo_optimized.png";
+const lisa = "./img/TEAM/Lisa_optimized.png";
+const nangoma = "./img/TEAM/nangoma_optimized.png";
+const grace = "/img/TEAM/grace_optimized.png";
+const rachael = "/img/TEAM/rachael_optimed.png";  // note: "optimed" might be typo — check spelling
+const edward = "/img/TEAM/edward_optimized.png";
+const pancrecious = "/img/TEAM/pancrecious_optimized.png";
+const solomon = "/img/TEAM/solomon_optimized.png";
 
 const teamMembers = [
   { name: 'Twaambo Chisamba Kayombo', role: 'CEO | Founder', image: twaambo },

@@ -1,6 +1,6 @@
 // src/App.tsx
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { AuthContext } from './context/AuthContext';
 import Login from './pages/Login';
@@ -24,41 +24,21 @@ function ProtectedRoute({ children }: { children: JSX.Element }) {
 }
 
 function App() {
-  return (
-    <Router>
-      <Routes>
-        {/* Login */}
-        <Route path="/login" element={<Login />} />
-
-        {/* Public Home Page */}
-        <Route path="/" element={<Home />} />
-
-        {/* Public About Page */}
-        <Route path="/about" element={<About />} />
-
-        {/* Public Contact Page */}
-        <Route path="/contact" element={<Contact />} />
-
-        {/* Public Graduation Page */}
-        <Route path="/graduation" element={<Graduation />} />
-
-        {/* Public Team Page */}
-        <Route path="/team" element={<Team />} />
-
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
-
-        {/* Placeholder for future pages */}
-        <Route path="/" element={<Navigate to="/login" replace />} />
-      </Routes>
-    </Router>
+  const router = createBrowserRouter(
+    [
+      { path: '/login', element: <Login /> },
+      { path: '/', element: <Home /> },
+      { path: '/about', element: <About /> },
+      { path: '/contact', element: <Contact /> },
+      { path: '/graduation', element: <Graduation /> },
+      { path: '/team', element: <Team /> },
+      { path: '/dashboard', element: <ProtectedRoute><Dashboard /></ProtectedRoute> },
+      { path: '*', element: <Navigate to="/login" replace /> },
+    ],
+    { future: { v7_relativeSplatPath: true, v7_startTransition: true } }
   );
+
+  return <RouterProvider router={router} />;
 }
 
 export default App;

@@ -1,22 +1,20 @@
 // src/pages/Graduation.tsx
-import React from 'react';
-import { Link } from 'react-router-dom';
+//import React from "react";
+import { Link } from "react-router-dom";
 
-// Import your assets (adjust paths if needed)
-import horizontalLogo from '../../public/img/HORIZONTAL.png'; // or wherever your images are
-import topBanner from '../../public/img/Top-Bunner-1.jpg';
-import corporateImage3 from '../../public/img/corporate image 3.jpeg';
-import graduationCohort from '../../public/img/graduation cohort.jpeg';
-import constanceHaajila from '../../public/img/Constance Haajila.jpg';
-import chongoLombe from '../../public/img/Chongo Lombe.jpg';
-import manuelMwanza from '../../public/img/Manuel Mwanza.jpg';
+// No imports needed for public/ images — just use string paths starting with "/"
+const horizontalLogo = "/img/HORIZONTAL.png";
+const topBanner = "/img/Top-Bunner-1.jpg";
+const corporateImage3 = "/img/corporate image 3.jpeg";
+const graduationCohort = "/img/graduation cohort.jpeg";
+const constanceHaajila = "/img/Constance Haajila.jpg";
+const chongoLombe = "/img/Chongo Lombe.jpg";
+const manuelMwanza = "/img/Manuel Mwanza.jpg";
 
+// Rest of your code stays the same//
 const Graduation = () => {
   return (
     <div className="bg-white min-h-screen">
-      {/* Spinner - you can make this conditional with state if needed */}
-      {/* <div id="spinner" className="..."> */} {/* Optional - remove if not using */} {/* </div> */}
-
       {/* Header / Navbar */}
       <header className="bg-navy text-white">
         <div className="container mx-auto px-4">
@@ -70,7 +68,7 @@ const Graduation = () => {
         </div>
       </header>
 
-      {/* Carousel / Hero Section */}
+      {/* Hero / Banner */}
       <section className="relative">
         <img
           src={topBanner}
@@ -190,7 +188,7 @@ const Graduation = () => {
         </div>
       </div>
 
-      {/* Footer - Reuse from your existing layout or create a Footer component */}
+      {/* Footer */}
       <footer className="bg-gray-900 text-white py-12">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">

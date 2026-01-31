@@ -18,7 +18,7 @@ const Home = () => {
       <header className="fixed top-0 left-0 right-0 z-50 bg-navy text-white shadow-lg">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           {/* Logo */}
-          <Link to="/" className="flex items-center">
+            <Link to="/" className="flex items-center">
             <img src="/img/HORIZONTAL.png" alt="Guiding Stars" className="h-12" />
           </Link>
 
@@ -60,7 +60,7 @@ const Home = () => {
       <section className="relative mt-20">
         <div className="relative">
           <img
-            src="img/Top-Bunner-1.jpg"
+            src="/img/Top-Bunner-1.jpg"
             alt="Hero Banner"
             className="w-full h-[80vh] object-cover brightness-75"
           />
@@ -101,8 +101,8 @@ const Home = () => {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             {/* Images */}
             <div className="grid grid-cols-2 gap-6">
-              <img src="img/_MG_6217-1.jpg" alt="About 1" className="rounded-lg shadow-lg" />
-              <img src="img/image 2.png" alt="About 2" className="rounded-lg shadow-lg" />
+              <img src="/img/_MG_6217-1.jpg" alt="About 1" className="rounded-lg shadow-lg" />
+              <img src="/img/image 2.png" alt="About 2" className="rounded-lg shadow-lg" />
             </div>
 
             {/* Text */}
@@ -226,19 +226,19 @@ const Home = () => {
           <div className="grid md:grid-cols-3 gap-8">
             {[
               {
-                img: 'img/Constance Haajila.jpg',
+                img: '/img/Constance Haajila.jpg',
                 name: 'Constance Haajila',
                 role: 'Student',
                 quote: '"The mentorship has exceeded my expectation, it has taught me to focus and always show up, I am now ready for opportunities."',
               },
               {
-                img: 'img/Chongo Lombe.jpg',
+                img: '/img/Chongo Lombe.jpg',
                 name: 'Chongo Lombe',
                 role: 'Student',
                 quote: '"I cant quantify the personal growth and inspiration gained from the program. It has equipped me with the skills for the corporate world."',
               },
               {
-                img: 'img/Manuel Mwanza.jpg',
+                img: '/img/Manuel Mwanza.jpg',
                 name: 'Manuel Mwanza',
                 role: 'Student',
                 quote: '"My journey has been about self-discovery resulting into heightened productivity and confidence in my leadership abilities."',
