@@ -1,5 +1,5 @@
 // src/App.tsx
-import React from 'react';
+import React, { type JSX } from 'react';
 import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { AuthContext } from './context/AuthContext';
@@ -35,7 +35,7 @@ function App() {
       { path: '/dashboard', element: <ProtectedRoute><Dashboard /></ProtectedRoute> },
       { path: '*', element: <Navigate to="/login" replace /> },
     ],
-    { future: { v7_relativeSplatPath: true, v7_startTransition: true } }
+    { future: { v7_relativeSplatPath: true } }
   );
 
   return <RouterProvider router={router} />;
