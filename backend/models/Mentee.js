@@ -1,25 +1,31 @@
-// backend/models/Mentee.js
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/db').sequelize;
+const { sequelize } = require('../config/db');
 
 const Mentee = sequelize.define('Mentee', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-  first_name: { type: DataTypes.STRING(100), allowNull: false },
-  last_name: { type: DataTypes.STRING(100), allowNull: false },
-  email: { type: DataTypes.STRING(255), allowNull: false },
-  phone: { type: DataTypes.STRING(20) },
-  background: { type: DataTypes.TEXT },
-  goals: { type: DataTypes.TEXT },
-  preferences: { type: DataTypes.TEXT },
+  first_name: { type: DataTypes.STRING, allowNull: false },
+  last_name: { type: DataTypes.STRING, allowNull: false },
+  email: { type: DataTypes.STRING, allowNull: false, unique: true },
+  phone: { type: DataTypes.STRING, allowNull: true }, // Changed to true
+  background: { type: DataTypes.TEXT, allowNull: true }, // Changed to true
+  goals: { type: DataTypes.TEXT, allowNull: true }, // Changed to true
+  preferences: { type: DataTypes.TEXT, allowNull: true },
   application_status: {
-    type: DataTypes.ENUM('pending', 'approved', 'rejected', 'active', 'completed'),
+    type: DataTypes.ENUM('pending', 'approved', 'active', 'rejected'),
     defaultValue: 'pending',
   },
-  enrollment_date: { type: DataTypes.DATEONLY },
+  email_verified: { type: DataTypes.BOOLEAN, defaultValue: false },
+  password_hash: { type: DataTypes.STRING, allowNull: true }, // Must be true initially
+  verification_token: { type: DataTypes.STRING, allowNull: true },
+  verification_token_expires: { type: DataTypes.DATE, allowNull: true },
 }, {
   tableName: 'mentees',
   timestamps: true,
   underscored: true,
 });
+
+Mentee.associate = (models) => {
+  Mentee.hasMany(models.Match, { foreignKey: 'mentee_id', as: 'Matches' });
+};
 
 module.exports = Mentee;

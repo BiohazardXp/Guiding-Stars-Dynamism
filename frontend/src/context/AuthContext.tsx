@@ -1,66 +1,41 @@
 // src/context/AuthContext.tsx
-import React, { createContext, useState, useEffect, ReactNode } from 'react';
-import axios from 'axios';
-
-interface User {
-  id: number;
-  email: string;
-  role: 'admin' | 'mentor';
-  first_name?: string;
-  last_name?: string;
-}
+import { createContext, useState, useEffect, ReactNode } from 'react';
 
 interface AuthContextType {
-  user: User | null;
   token: string | null;
-  login: (email: string, password: string) => Promise<void>;
-  logout: () => void;
   isLoading: boolean;
+  login: (token: string) => void;
+  logout: () => void;
 }
 
-export const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | null>(null);
 
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Check for existing token on mount
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
     if (storedToken) {
       setToken(storedToken);
-      // Optional: fetch user info if you add /api/auth/me endpoint later
     }
     setIsLoading(false);
   }, []);
 
-  const login = async (email: string, password: string) => {
-    try {
-      const response = await axios.post('http://localhost:5000/api/auth/login', {
-        email,
-        password,
-      });
-
-      const { token: newToken, user: userData } = response.data;
-
-      localStorage.setItem('token', newToken);
-      setToken(newToken);
-      setUser(userData);
-    } catch (error: any) {
-      console.error('Login failed:', error.response?.data || error.message);
-      throw new Error(error.response?.data?.message || 'Login failed');
-    }
+  const login = (newToken: string) => {
+    localStorage.setItem('token', newToken);
+    setToken(newToken);
   };
 
   const logout = () => {
     localStorage.removeItem('token');
     setToken(null);
-    setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, isLoading }}>
+    <AuthContext.Provider value={{ token, isLoading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
-};
+}

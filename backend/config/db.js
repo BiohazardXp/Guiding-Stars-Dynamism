@@ -1,43 +1,46 @@
-// backend/config/db.js
-require('dotenv').config();
-const { Sequelize } = require('sequelize');  // <-- Destructure Sequelize here
+// backend/config/db.js (or wherever your db.js is located)
+const { Sequelize } = require('sequelize');
 const mysql = require('mysql2/promise');
+require('dotenv').config();
 
-const {
-  DB_HOST = '127.0.0.1',
-  DB_USER = 'root',
-  DB_PASS = '',  // blank for XAMPP default
-  DB_NAME = 'guiding_stars_db',
-  DB_PORT = 3306,
-} = process.env;
+// Database configuration
+const DB_NAME = process.env.DB_NAME || 'guiding_stars';
+const DB_USER = process.env.DB_USER || 'root';
+const DB_PASSWORD = process.env.DB_PASSWORD || '';
+const DB_HOST = process.env.DB_HOST || 'localhost';
 
+// Function to create database if it doesn't exist
 async function initializeDatabase() {
   try {
+    // Connect to MySQL without specifying a database
     const connection = await mysql.createConnection({
       host: DB_HOST,
       user: DB_USER,
-      password: DB_PASS,
-      port: DB_PORT,
+      password: DB_PASSWORD,
     });
 
-    await connection.query(`CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\`;`);
-    console.log(`Database '${DB_NAME}' ready (created or already exists)`);
+    // Create database if it doesn't exist
+    await connection.query(`CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\``);
+    console.log(`Database '${DB_NAME}' checked/created successfully`);
 
     await connection.end();
-  } catch (err) {
-    console.error('Failed to create/init database:', err.message);
-    process.exit(1);
+  } catch (error) {
+    console.error('Error initializing database:', error.message);
+    throw error;
   }
 }
 
-const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASS, {
+// Create Sequelize instance
+const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
   host: DB_HOST,
-  port: DB_PORT,
   dialect: 'mysql',
-  logging: false,  // set to console.log for more debug info
+  logging: false, // Set to console.log to see SQL queries
+  pool: {
+    max: 5,
+    min: 0,
+    acquire: 30000,
+    idle: 10000,
+  },
 });
 
-module.exports = {
-  sequelize,
-  initializeDatabase,
-};
+module.exports = { sequelize, initializeDatabase };

@@ -1,6 +1,6 @@
 // backend/models/User.js
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/db').sequelize;  // import the instance
+const { sequelize } = require('../config/db');
 
 const User = sequelize.define('User', {
   id: {
@@ -8,32 +8,40 @@ const User = sequelize.define('User', {
     primaryKey: true,
     autoIncrement: true,
   },
+  first_name: {
+    type: DataTypes.STRING(50),
+    allowNull: false,
+  },
+  last_name: {
+    type: DataTypes.STRING(50),
+    allowNull: false,
+  },
   email: {
-    type: DataTypes.STRING(255),
+    type: DataTypes.STRING(100),
     allowNull: false,
     unique: true,
-    validate: { isEmail: true },
   },
   password_hash: {
     type: DataTypes.STRING(255),
     allowNull: false,
   },
   role: {
-    type: DataTypes.ENUM('admin', 'mentor'),
+    type: DataTypes.ENUM('admin', 'mentor', 'mentee'),
     allowNull: false,
-  },
-  first_name: {
-    type: DataTypes.STRING(100),
-    allowNull: true,
-  },
-  last_name: {
-    type: DataTypes.STRING(100),
-    allowNull: true,
   },
 }, {
   tableName: 'users',
-  timestamps: true,  // auto created_at / updated_at
-  underscored: true, // snake_case columns
+  timestamps: true,
+  underscored: true,
 });
+
+// Define associations
+User.associate = (models) => {
+  // User has one Mentor profile
+  User.hasOne(models.Mentor, {
+    foreignKey: 'user_id',
+    as: 'Mentor',
+  });
+};
 
 module.exports = User;

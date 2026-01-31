@@ -1,6 +1,6 @@
 // backend/models/Match.js
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/db').sequelize;
+const { sequelize } = require('../config/db');
 
 const Match = sequelize.define('Match', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
@@ -17,5 +17,20 @@ const Match = sequelize.define('Match', {
   timestamps: true,
   underscored: true,
 });
+
+// Define associations
+Match.associate = (models) => {
+  // Match belongs to a Mentor
+  Match.belongsTo(models.Mentor, {
+    foreignKey: 'mentor_id',
+    as: 'Mentor',
+  });
+
+  // Match belongs to a Mentee
+  Match.belongsTo(models.Mentee, {
+    foreignKey: 'mentee_id',
+    as: 'Mentee',
+  });
+};
 
 module.exports = Match;

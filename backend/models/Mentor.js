@@ -1,6 +1,5 @@
-// backend/models/Mentor.js
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/db').sequelize;
+const { sequelize } = require('../config/db');
 
 const Mentor = sequelize.define('Mentor', {
   id: {
@@ -26,9 +25,23 @@ const Mentor = sequelize.define('Mentor', {
   tableName: 'mentors',
   timestamps: true,
   underscored: true,
+  createdAt: 'created_at',
+  updatedAt: 'updated_at',
 });
 
-// Associations (after all models are defined)
-Mentor.belongsTo(require('./User'), { foreignKey: 'user_id' });
+// ✅ STANDARDIZED ASSOCIATION LOGIC
+Mentor.associate = (models) => {
+  // Mentor belongs to a User (Admin account)
+  Mentor.belongsTo(models.User, { 
+    foreignKey: 'user_id',
+    as: 'User' 
+  });
+
+  // Mentor can have many matches
+  Mentor.hasMany(models.Match, { 
+    foreignKey: 'mentor_id',
+    as: 'Matches'
+  });
+};
 
 module.exports = Mentor;
