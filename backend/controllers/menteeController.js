@@ -1,11 +1,11 @@
 const { Mentee, Mentor, User } = require('../models/index'); 
 const bcrypt = require('bcryptjs');
 const { Op } = require('sequelize');
-const { 
-  generateVerificationToken, 
-  sendWelcomeEmail, // Matches your emailService.js
-  sendRejectionEmail 
-} = require('../services/emailService');
+const crypto = require('crypto');
+const { sendWelcomeEmail, sendRejectionEmail } = require('../services/emailService');
+
+// Helper for token generation
+const generateVerificationToken = () => crypto.randomBytes(32).toString('hex');
 
 /**
  * GET ALL MENTEES (Admin)
@@ -48,6 +48,9 @@ exports.createMentee = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Email already registered.' });
     }
 
+    const rawToken = generateVerificationToken();
+    const tokenExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24h
+
     const mentee = await Mentee.create({
       first_name,
       last_name,
@@ -57,8 +60,12 @@ exports.createMentee = async (req, res) => {
       goals: goals || '',
       preferences: preferences || '',
       application_status: 'pending',
-      email_verified: false
+      email_verified: false,
+      verification_token: rawToken,
+      verification_token_expires: tokenExpiry
     });
+
+    await sendWelcomeEmail(mentee.email, mentee.first_name, rawToken);
 
     res.status(201).json({ success: true, message: 'Application submitted!', data: mentee });
   } catch (error) {
@@ -81,38 +88,31 @@ exports.updateMentee = async (req, res) => {
     const oldStatus = mentee.application_status;
     const newStatus = application_status;
 
-    // Handle transition to 'approved'
     if (newStatus === 'approved' && oldStatus !== 'approved') {
       const verificationToken = generateVerificationToken();
-      const tokenExpiry = new Date();
-      tokenExpiry.setHours(tokenExpiry.getHours() + 24);
+      const tokenExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000);
 
       await mentee.update({
-        ...req.body, // Update other fields from form
+        ...req.body,
         verification_token: verificationToken,
         verification_token_expires: tokenExpiry,
         email_verified: false
       });
 
       try {
-        // Corrected to use the function exported in your emailService.js
         await sendWelcomeEmail(mentee.email, mentee.first_name, verificationToken);
-        console.log('✅ Activation email sent to:', mentee.email);
       } catch (emailErr) {
         console.error('❌ Email sending failed:', emailErr.message);
       }
     } 
-    // Handle transition to 'rejected'
     else if (newStatus === 'rejected' && oldStatus !== 'rejected') {
       await mentee.update(req.body);
       try {
         await sendRejectionEmail(mentee.email, mentee.first_name);
-        console.log('✅ Rejection email sent to:', mentee.email);
       } catch (emailErr) {
         console.error('❌ Rejection email failed:', emailErr.message);
       }
     } 
-    // Standard update
     else {
       await mentee.update(req.body);
     }
@@ -134,23 +134,17 @@ exports.activateAccount = async (req, res) => {
     const { token } = req.params;
     const { password } = req.body;
 
-    console.log('--- ACTIVATION ATTEMPT ---');
-    console.log('Token from URL:', token);
-
-    // 1. Find the mentee by verification_token
-    const mentee = await Mentee.findOne({ 
-      where: { verification_token: token.trim() } 
+    const mentee = await Mentee.findOne({
+      where: {
+        verification_token: token.trim(),
+        verification_token_expires: { [Op.gt]: new Date() }
+      }
     });
 
     if (!mentee) {
-      console.log('❌ Result: Token not found in database.');
-      return res.status(400).json({ 
-        success: false, 
-        message: 'Invalid or expired activation link.' 
-      });
+      return res.status(400).json({ success: false, message: 'Invalid or expired activation link.' });
     }
 
-    // 2. Hash and Update
     const hashedPassword = await bcrypt.hash(password, 10);
     
     await mentee.update({
@@ -161,9 +155,7 @@ exports.activateAccount = async (req, res) => {
       verification_token_expires: null
     });
 
-    console.log('✅ Account set to ACTIVE for:', mentee.email);
     res.json({ success: true, message: 'Account activated successfully!' });
-
   } catch (error) {
     console.error('Activation Error:', error);
     res.status(500).json({ success: false, message: 'Server error during activation.' });
@@ -184,3 +176,6 @@ exports.deleteMentee = async (req, res) => {
     res.status(500).json({ success: false, message: 'Server error' });
   }
 };
+
+// Aliasing verifyMentee to activateAccount for backward compatibility if needed
+exports.verifyMentee = exports.activateAccount;

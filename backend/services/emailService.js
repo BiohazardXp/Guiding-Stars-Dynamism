@@ -2,12 +2,26 @@
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 
-// Create email transporter
+// Create email transporter (explicit host/port + verify)
 const transporter = nodemailer.createTransport({
-  service: 'gmail', // or 'outlook', 'yahoo', etc.
+  host: 'smtp.gmail.com',
+  port: 587,          // Changed from 465
+  secure: false,      // Changed to false for 587
   auth: {
-    user: process.env.EMAIL_USER, // Your email
-    pass: process.env.EMAIL_PASSWORD // Your email password or app password
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASSWORD,
+  },
+  tls: {
+    rejectUnauthorized: false // Helps if you are on a strict local network
+  }
+});
+
+// Verify transporter at startup to get immediate errors (DNS/auth/etc)
+transporter.verify((err, success) => {
+  if (err) {
+    console.error('Email transporter verification failed:', err);
+  } else {
+    console.log('Email transporter is ready');
   }
 });
 

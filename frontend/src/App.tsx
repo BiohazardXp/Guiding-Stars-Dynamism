@@ -1,10 +1,27 @@
 // src/App.tsx
-import React, { type JSX } from 'react';
-import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
-import { useContext } from 'react';
+import React, { type JSX, useContext } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthContext } from './context/AuthContext';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
+import Sidebar from './components/Sidebar';
+
+// new imports for all pages
+import Home from './pages/Home';
+import About from './pages/About';
+import Activate from './pages/Activate';
+import ApplyPage from './pages/ApplyPage';
+import Contact from './pages/Contact';
+import Graduation from './pages/Graduation';
+import Matches from './pages/Matches';
+import MenteeDashboard from './pages/MenteeDashboard';
+import MenteeLogin from './pages/MenteeLogin';
+import Mentees from './pages/Mentees';
+import Mentors from './pages/Mentors';
+import Progress from './pages/Progress';
+import ResendVerification from './pages/ResendVerification';
+import Team from './pages/Team';
+import VerifyEmail from './pages/VerifyEmail';
 
 function ProtectedRoute({ children }: { children: JSX.Element }) {
   const context = useContext(AuthContext);
@@ -41,19 +58,91 @@ function App() {
   return (
     <Router>
       <Routes>
+        {/* Public routes */}
+        <Route path="/home" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/activate/:token" element={<Activate />} />
+        <Route path="/apply" element={<ApplyPage />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/graduation" element={<Graduation />} />
+        <Route path="/team" element={<Team />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
+        <Route path="/resend-verification" element={<ResendVerification />} />
+
         <Route path="/login" element={<Login />} />
-        
+        <Route path="/mentee/login" element={<MenteeLogin />} />
+
+        {/* Protected routes (require auth) */}
         <Route
           path="/dashboard"
           element={
             <ProtectedRoute>
-              <Dashboard />
+              <ProtectedLayout>
+                <Dashboard />
+              </ProtectedLayout>
             </ProtectedRoute>
           }
         />
 
-        {/* Placeholder for future pages */}
-        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route
+          path="/mentee/dashboard"
+          element={
+            <ProtectedRoute>
+              <ProtectedLayout>
+                <MenteeDashboard />
+              </ProtectedLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Separation of concerns: protected pages */}
+        <Route
+          path="/matches"
+          element={
+            <ProtectedRoute>
+              <ProtectedLayout>
+                <Matches />
+              </ProtectedLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/mentees"
+          element={
+            <ProtectedRoute>
+              <ProtectedLayout>
+                <Mentees />
+              </ProtectedLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/mentors"
+          element={
+            <ProtectedRoute>
+              <ProtectedLayout>
+                <Mentors />
+              </ProtectedLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/progress"
+          element={
+            <ProtectedRoute>
+              <ProtectedLayout>
+                <Progress />
+              </ProtectedLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* default/fallback */}
+        <Route path="/" element={<Navigate to="/home" replace />} />
+        <Route path="*" element={<Navigate to="/home" replace />} />
       </Routes>
     </Router>
   );
