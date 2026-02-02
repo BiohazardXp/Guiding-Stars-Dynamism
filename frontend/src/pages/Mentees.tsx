@@ -1,8 +1,9 @@
 // frontend/src/pages/Mentees.tsx
-import { useEffect, useState, Fragment } from 'react';
+import React, { useEffect, useState, Fragment, useContext } from 'react'; // Added useContext
 import { Dialog, Transition } from '@headlessui/react';
 import api from '../services/api';
 import Sidebar from '../components/Sidebar';
+import { AuthContext } from '../context/AuthContext'; // Import AuthContext
 
 interface Mentee {
   id: number;
@@ -39,22 +40,40 @@ const Mentees = () => {
   });
   const [submitLoading, setSubmitLoading] = useState(false);
 
+  // 1. Access the token and loading state from context
+  const context = useContext(AuthContext);
+  const token = context?.token;
+  const isAuthLoading = context?.isLoading;
+
   useEffect(() => {
-    fetchData();
-  }, []);
+    // 2. Only fetch if Auth is finished and we have a token
+    if (!isAuthLoading && token) {
+      fetchData();
+    }
+  }, [token, isAuthLoading]);
 
   const fetchData = async () => {
     setLoading(true);
     try {
+      // 3. Explicitly pass the token in headers for both requests
+      const config = {
+        headers: { Authorization: `Bearer ${token}` }
+      };
+
       const [menteesRes, mentorsRes] = await Promise.all([
-        api.get('/mentees'),
-        api.get('/mentors'),
+        api.get('/mentees', config),
+        api.get('/mentors', config),
       ]);
+
       setMentees(menteesRes.data.data || []);
       setMentors(mentorsRes.data.data || []);
       setError('');
     } catch (err: any) {
-      setError('Failed to load data: ' + (err.response?.data?.message || err.message));
+      if (err.response?.status === 401) {
+        setError('Session expired. Please log in again.');
+      } else {
+        setError('Failed to load data: ' + (err.response?.data?.message || err.message));
+      }
     } finally {
       setLoading(false);
     }
@@ -77,13 +96,17 @@ const Mentees = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedMentee) return;
+    if (!selectedMentee || !token) return; // Ensure token is present
 
     setSubmitLoading(true);
     setError('');
 
     try {
-      await api.put(`/mentees/${selectedMentee.id}`, formData);
+      // 4. Explicitly pass the token for the Update request
+      await api.put(`/mentees/${selectedMentee.id}`, formData, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
       setSuccess('Mentee updated successfully!');
       setIsModalOpen(false);
       fetchData();
@@ -95,7 +118,8 @@ const Mentees = () => {
     }
   };
 
-  if (loading) {
+  // 5. Loading guard for Auth check
+  if (isAuthLoading || (loading && mentees.length === 0)) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-gray-600">Loading mentees...</div>

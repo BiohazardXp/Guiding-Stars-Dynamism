@@ -26,12 +26,9 @@ function Login() {
 
       const { token } = response.data;
 
-      // Use context login method
+      // Use context login method with role
       if (authContext) {
-        authContext.login(token);
-      } else {
-        // Fallback
-        localStorage.setItem('token', token);
+        authContext.login(token, 'admin');
       }
 
       // Redirect to dashboard

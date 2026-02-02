@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../services/api';
+import { AuthContext } from '../context/AuthContext';
 
 function Activate() {
   const { token } = useParams<{ token: string }>();
   const navigate = useNavigate();
+  const authContext = useContext(AuthContext);
   
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -30,19 +32,27 @@ function Activate() {
     setLoading(true);
     
     try {
-      // Logic fix: Only one request is sent to the backend.
-      // Once this succeeds, the token is destroyed server-side.
+      // Send password to activate account
       const response = await api.post(`/mentees/verify/${token}`, { password });
       
-      setSuccess(response.data.message || 'Account activated successfully!');
+      // Destructure token if your backend provides it upon successful activation
+      const { token: authToken, message } = response.data;
       
-      // Redirect to login after 3 seconds
+      setSuccess(message || 'Account activated successfully!');
+      
+      // Auto-login logic
       setTimeout(() => {
-        navigate('/login');
-      }, 3000);
+        if (authToken && authContext) {
+          // Log them in immediately as a mentee
+          authContext.login(authToken, 'mentee');
+          navigate('/mentee/dashboard', { replace: true });
+        } else {
+          // If no token returned, send to MENTEE login, not admin login
+          navigate('/mentee/login', { replace: true });
+        }
+      }, 2500);
       
     } catch (err: any) {
-      // If the token is invalid or expired, the backend tells us here.
       setError(err.response?.data?.message || 'Failed to activate account. The link may be invalid or expired.');
     } finally {
       setLoading(false);
@@ -54,7 +64,7 @@ function Activate() {
       <div className="max-w-md w-full">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="inline-block p-4 bg-blue-600 rounded-full mb-4">
+          <div className="inline-block p-4 bg-blue-600 rounded-full mb-4 shadow-lg">
             <svg className="w-12 h-12 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
@@ -63,29 +73,30 @@ function Activate() {
           <p className="text-gray-600">Welcome to Guiding Stars! Set your password to get started.</p>
         </div>
 
-        {/* Card */}
-        <div className="bg-white rounded-lg shadow-xl p-8">
+        {/* Main Card */}
+        <div className="bg-white rounded-lg shadow-xl p-8 border border-gray-100">
           {success ? (
-            <div className="text-center">
+            <div className="text-center animate-pulse">
               <div className="inline-block p-4 bg-green-100 rounded-full mb-4">
                 <svg className="w-12 h-12 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <h2 className="text-2xl font-bold text-green-600 mb-2">Account Activated!</h2>
+              <h2 className="text-2xl font-bold text-green-600 mb-2">Success!</h2>
               <p className="text-gray-600 mb-4">{success}</p>
-              <p className="text-sm text-gray-500">Redirecting to login page...</p>
+              <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
+                <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                Redirecting to your dashboard...
+              </div>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Error Message */}
               {error && (
-                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
                   {error}
                 </div>
               )}
 
-              {/* Password Field */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Create Password *
@@ -95,14 +106,11 @@ function Activate() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  minLength={6}
-                  placeholder="Enter your password"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Minimum 6 characters"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                 />
-                <p className="text-xs text-gray-500 mt-1">Must be at least 6 characters</p>
               </div>
 
-              {/* Confirm Password Field */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Confirm Password *
@@ -112,53 +120,44 @@ function Activate() {
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
-                  minLength={6}
-                  placeholder="Re-enter your password"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Repeat your password"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                 />
               </div>
 
-              {/* Password Strength Indicator */}
+              {/* Strength Meter */}
               {password && (
                 <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <div className={`h-2 flex-1 rounded-full ${
-                      password.length < 6 ? 'bg-red-300' :
-                      password.length < 8 ? 'bg-yellow-300' :
-                      'bg-green-300'
-                    }`}></div>
+                  <div className="flex gap-1 h-1.5">
+                    <div className={`flex-1 rounded-full ${password.length >= 1 ? (password.length < 6 ? 'bg-red-400' : password.length < 10 ? 'bg-yellow-400' : 'bg-green-500') : 'bg-gray-200'}`}></div>
+                    <div className={`flex-1 rounded-full ${password.length >= 6 ? (password.length < 10 ? 'bg-yellow-400' : 'bg-green-500') : 'bg-gray-200'}`}></div>
+                    <div className={`flex-1 rounded-full ${password.length >= 10 ? 'bg-green-500' : 'bg-gray-200'}`}></div>
                   </div>
-                  <p className={`text-xs ${
-                    password.length < 6 ? 'text-red-600' :
-                    password.length < 8 ? 'text-yellow-600' :
-                    'text-green-600'
-                  }`}>
-                    {password.length < 6 ? 'Weak password' :
-                     password.length < 8 ? 'Medium password' :
-                     'Strong password'}
+                  <p className="text-xs text-gray-500">
+                    {password.length < 6 ? 'Weak' : password.length < 10 ? 'Medium' : 'Strong'} password
                   </p>
                 </div>
               )}
 
-              {/* Submit Button */}
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed font-medium"
+                className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed font-semibold shadow-md"
               >
-                {loading ? 'Activating...' : 'Activate Account'}
+                {loading ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    Processing...
+                  </span>
+                ) : 'Activate Account'}
               </button>
             </form>
           )}
         </div>
 
-        {/* Footer */}
         <div className="text-center mt-6">
-          <p className="text-sm text-gray-600">
-            Need help? Contact us at{' '}
-            <a href="mailto:support@guidingstars.com" className="text-blue-600 hover:underline">
-              support@guidingstars.com
-            </a>
+          <p className="text-sm text-gray-500">
+            © 2026 Guiding Stars. All rights reserved.
           </p>
         </div>
       </div>

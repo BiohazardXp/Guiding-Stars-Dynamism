@@ -1,22 +1,25 @@
 // src/pages/Matches.tsx
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
+import { AuthContext } from '../context/AuthContext'; // add this import
 
 interface Mentor {
   id: number;
-  first_name: string;
-  last_name: string;
-  expertise_areas: string;
-  status: string;
-  user_id: number;
+  first_name?: string;
+  last_name?: string;
+  expertise_areas?: string;
+  status?: string;
+  user_id?: number;
+  User?: { first_name: string; last_name: string; email: string };
 }
 
 interface Mentee {
   id: number;
-  first_name: string;
-  last_name: string;
-  goals: string;
-  application_status: string;
+  first_name?: string;
+  last_name?: string;
+  goals?: string;
+  application_status?: string;
 }
 
 interface Match {
@@ -31,6 +34,9 @@ interface Match {
 }
 
 function Matches() {
+  const auth = useContext(AuthContext);
+  const navigate = useNavigate();
+
   const [activeTab, setActiveTab] = useState<'existing' | 'create'>('existing');
   const [matches, setMatches] = useState<Match[]>([]);
   const [mentors, setMentors] = useState<Mentor[]>([]);
@@ -46,9 +52,24 @@ function Matches() {
   const [matchNotes, setMatchNotes] = useState('');
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    // wait for token from context or localStorage before fetching
+    const token =
+      auth?.token ||
+      localStorage.getItem('token') ||
+      localStorage.getItem('authToken') ||
+      sessionStorage.getItem('token');
 
+    if (!token) {
+      setLoading(false);
+      setError('Authentication required. Please log in.');
+      navigate('/login');
+      return;
+    }
+
+    fetchData();
+    // run again if auth.token changes
+  }, [auth?.token]);
+  
   const fetchData = async () => {
     try {
       setLoading(true);
@@ -62,16 +83,24 @@ function Matches() {
       const enrichedMatches = matchesRes.data.map((match: Match) => {
         const mentor = mentorsRes.data.find((m: Mentor) => m.id === match.mentor_id);
         const mentee = menteesRes.data.find((m: Mentee) => m.id === match.mentee_id);
+        const mentorName =
+          (mentor && (mentor.first_name || mentor.User?.first_name))
+            ? `${mentor.first_name || mentor.User?.first_name} ${mentor.last_name || mentor.User?.last_name}`
+            : 'Unknown';
+        const menteeName =
+          (mentee && (mentee.first_name || mentee.last_name))
+            ? `${mentee.first_name || mentee.last_name}`
+            : 'Unknown';
         return {
           ...match,
-          mentor_name: mentor ? `${mentor.first_name} ${mentor.last_name}` : 'Unknown',
-          mentee_name: mentee ? `${mentee.first_name} ${mentee.last_name}` : 'Unknown'
+          mentor_name: mentorName,
+          mentee_name: menteeName
         };
       });
 
       setMatches(enrichedMatches);
-      setMentors(mentorsRes.data.filter((m: Mentor) => m.status === 'active'));
-      setMentees(menteesRes.data.filter((m: Mentee) => m.application_status === 'approved'));
+      setMentors(mentorsRes.data.filter((m: Mentor) => (m.status || '').toLowerCase() === 'active'));
+      setMentees(menteesRes.data.filter((m: Mentee) => (m.application_status || '').toLowerCase() === 'approved'));
       setError('');
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to load data');
@@ -304,7 +333,7 @@ function Matches() {
                     <option value="">Choose a mentor...</option>
                     {mentors.map((mentor) => (
                       <option key={mentor.id} value={mentor.id}>
-                        {mentor.first_name} {mentor.last_name}
+                        {mentor.first_name || mentor.User?.first_name} {mentor.last_name || mentor.User?.last_name}
                         {mentor.expertise_areas && ` - ${mentor.expertise_areas.split(',')[0]}`}
                       </option>
                     ))}

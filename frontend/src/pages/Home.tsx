@@ -1,24 +1,18 @@
-
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 const Home = () => {
   useEffect(() => {
-    // Re-initialize any third-party scripts if needed (e.g., WOW.js, Owl Carousel)
-    // For now, we skip heavy jQuery dependencies
     document.title = 'Guiding Stars - Bridging Academia and Practice';
   }, []);
 
   return (
     <div className="bg-white">
-      {/* Spinner - optional loading overlay (can remove if not needed) */}
-      {/* <div id="spinner" className="..."> ... </div> */}
-
-      {/* Header / Navbar */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-navy text-white shadow-lg">
+      {/* Header / Navbar - FIXED with solid background */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-gray-900 text-white shadow-lg">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           {/* Logo */}
-            <Link to="/" className="flex items-center">
+          <Link to="/" className="flex items-center">
             <img src="/img/HORIZONTAL.png" alt="Guiding Stars" className="h-12" />
           </Link>
 
@@ -30,28 +24,40 @@ const Home = () => {
           </button>
 
           {/* Desktop Menu */}
-          <nav className="hidden lg:flex space-x-8 items-center">
-            <Link to="/" className="font-semibold hover:text-theme transition">Home</Link>
-            <Link to="/about" className="font-semibold hover:text-theme transition">About</Link>
-            <Link to="/team" className="font-semibold hover:text-theme transition">Team</Link>
-            <Link to="/contact" className="font-semibold hover:text-theme transition">Contact Us</Link>
+          <nav className="hidden lg:flex space-x-6 items-center">
+            <Link to="/" className="font-semibold hover:text-blue-400 transition">Home</Link>
+            <Link to="/about" className="font-semibold hover:text-blue-400 transition">About</Link>
+            <Link to="/team" className="font-semibold hover:text-blue-400 transition">Team</Link>
+            <Link to="/contact" className="font-semibold hover:text-blue-400 transition">Contact Us</Link>
 
             {/* Events Dropdown */}
             <div className="relative group">
-              <button className="font-semibold hover:text-theme transition flex items-center">
+              <button className="font-semibold hover:text-blue-400 transition flex items-center">
                 Events <span className="ml-1">▼</span>
               </button>
               <div className="absolute hidden group-hover:block bg-white text-gray-800 shadow-lg rounded mt-2 w-48">
-                <Link to="/graduation1" className="block px-4 py-2 hover:bg-gray-100">First Cohort Graduation</Link>
+                <Link to="/graduation" className="block px-4 py-2 hover:bg-gray-100">First Cohort Graduation</Link>
               </div>
             </div>
 
-            <a
-              href="#contact"
-              className="bg-theme text-white px-6 py-3 rounded font-semibold hover:bg-opacity-90 transition"
+            {/* Apply Now Button */}
+            <Link
+              to="/apply"
+              className="bg-green-600 text-white px-6 py-2.5 rounded-lg font-semibold hover:bg-green-700 transition"
             >
-              ENQUIRE NOW <i className="fa fa-arrow-right ml-2"></i>
-            </a>
+              APPLY NOW
+            </Link>
+
+            {/* Admin Login - Discrete link */}
+            <Link
+              to="/login"
+              className="text-gray-400 hover:text-white text-sm transition"
+              title="Admin Login"
+            >
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+            </Link>
           </nav>
         </div>
       </header>
@@ -74,14 +80,14 @@ const Home = () => {
               </h1>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
-                  to="/contact"
-                  className="bg-theme text-white px-8 py-4 rounded font-semibold hover:bg-opacity-90 transition animate-fade-in-left"
+                  to="/apply"
+                  className="bg-green-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-green-700 transition shadow-lg"
                 >
-                  ENROLL
+                  APPLY NOW
                 </Link>
                 <a
                   href="#contact"
-                  className="bg-white text-theme px-8 py-4 rounded font-semibold hover:bg-gray-100 transition animate-fade-in-right"
+                  className="bg-white text-gray-900 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition shadow-lg"
                 >
                   ENQUIRE
                 </a>
@@ -95,7 +101,7 @@ const Home = () => {
       <section id="about" className="py-16 bg-gray-50">
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-12">
-            Welcome to <span className="text-theme uppercase">Guiding Stars</span>
+            Welcome to <span className="text-blue-600 uppercase">Guiding Stars</span>
           </h2>
 
           <div className="grid md:grid-cols-2 gap-12 items-center">
@@ -116,7 +122,7 @@ const Home = () => {
               <div className="text-center md:text-left">
                 <Link
                   to="/about"
-                  className="inline-block bg-theme text-white px-8 py-4 rounded font-semibold hover:bg-opacity-90 transition"
+                  className="inline-block bg-blue-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-blue-700 transition"
                 >
                   Read More
                 </Link>
@@ -130,9 +136,9 @@ const Home = () => {
       <section id="services" className="py-16">
         <div className="container mx-auto px-6">
           <div className="text-center mb-12">
-            <h6 className="text-theme uppercase text-lg font-semibold">Our Services</h6>
+            <h6 className="text-blue-600 uppercase text-lg font-semibold">Our Services</h6>
             <h2 className="text-4xl font-bold mt-2">
-              Explore Our <span className="text-theme uppercase">Services</span>
+              Explore Our <span className="text-blue-600 uppercase">Services</span>
             </h2>
           </div>
 
@@ -148,7 +154,7 @@ const Home = () => {
                 key={idx}
                 className="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition transform hover:-translate-y-2"
               >
-                <div className="text-theme text-5xl mb-6">
+                <div className="text-blue-600 text-5xl mb-6">
                   <i className={`fa ${service.icon}`}></i>
                 </div>
                 <h5 className="text-xl font-bold mb-4">{service.title}</h5>
@@ -159,13 +165,29 @@ const Home = () => {
         </div>
       </section>
 
+      {/* Call to Action - Application Section */}
+      <section className="py-16 bg-gradient-to-r from-blue-600 to-blue-800 text-white">
+        <div className="container mx-auto px-6 text-center">
+          <h2 className="text-4xl font-bold mb-6">Ready to Start Your Journey?</h2>
+          <p className="text-xl mb-8 max-w-2xl mx-auto">
+            Join the next cohort of ambitious professionals and transform your career with personalized mentorship.
+          </p>
+          <Link
+            to="/apply"
+            className="inline-block bg-white text-blue-600 px-12 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition shadow-lg"
+          >
+            APPLY FOR MENTORSHIP
+          </Link>
+        </div>
+      </section>
+
       {/* Contact Form Section */}
       <section id="contact" className="py-16 bg-gray-100">
         <div className="container mx-auto px-6">
           <div className="text-center mb-12">
-            <h6 className="text-theme uppercase text-lg font-semibold">CONTACT</h6>
+            <h6 className="text-blue-600 uppercase text-lg font-semibold">CONTACT</h6>
             <h2 className="text-4xl font-bold mt-2">
-              GET IN <span className="text-theme uppercase">TOUCH</span>
+              GET IN <span className="text-blue-600 uppercase">TOUCH</span>
             </h2>
           </div>
 
@@ -177,21 +199,21 @@ const Home = () => {
                   name="name"
                   placeholder="YOUR NAME..."
                   required
-                  className="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-theme"
+                  className="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                 />
                 <input
                   type="email"
                   name="email"
                   placeholder="YOUR EMAIL..."
                   required
-                  className="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-theme"
+                  className="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                 />
                 <input
                   type="text"
                   name="subject"
                   placeholder="SUBJECT..."
                   required
-                  className="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-theme"
+                  className="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                 />
               </div>
 
@@ -200,12 +222,12 @@ const Home = () => {
                 placeholder="YOUR MESSAGE..."
                 required
                 rows={6}
-                className="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-theme mb-6"
+                className="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 mb-6"
               ></textarea>
 
               <button
                 type="submit"
-                className="w-full bg-theme text-white py-4 rounded-lg font-semibold hover:bg-opacity-90 transition"
+                className="w-full bg-blue-600 text-white py-4 rounded-lg font-semibold hover:bg-blue-700 transition"
               >
                 SEND MESSAGE NOW
               </button>
@@ -215,11 +237,11 @@ const Home = () => {
       </section>
 
       {/* Testimonials Section */}
-      <section className="py-16 bg-dark text-white">
+      <section className="py-16 bg-gray-900 text-white">
         <div className="container mx-auto px-6">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold">
-              What Our <span className="text-theme uppercase">Students Say</span>
+              What Our <span className="text-blue-400 uppercase">Students Say</span>
             </h2>
           </div>
 
@@ -260,18 +282,26 @@ const Home = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-dark text-white py-16">
+      <footer className="bg-gray-900 text-white py-16">
         <div className="container mx-auto px-6">
           <div className="grid md:grid-cols-4 gap-12">
             {/* Logo & Description */}
             <div>
               <img src="/img/HORIZONTAL (2).png" alt="Guiding Stars" className="h-16 mb-6" />
               <p className="text-gray-300">Nurture Brilliance, Ignite Success.</p>
+              <div className="mt-6">
+                <Link
+                  to="/login"
+                  className="text-sm text-gray-400 hover:text-white transition"
+                >
+                  Staff Login
+                </Link>
+              </div>
             </div>
 
             {/* Contact */}
             <div>
-              <h6 className="text-theme uppercase font-bold mb-6">Contact</h6>
+              <h6 className="text-blue-400 uppercase font-bold mb-6">Contact</h6>
               <p className="mb-4"><i className="fa fa-map-marker-alt mr-3"></i>Plot 25866 Kabangwe, off Great North Road, Lusaka.</p>
               <p className="mb-4"><i className="fa fa-phone-alt mr-3"></i>+260 973 223 910</p>
               <p><i className="fa fa-envelope mr-3"></i>info@guidingstars.com</p>
@@ -279,24 +309,25 @@ const Home = () => {
 
             {/* Company Links */}
             <div>
-              <h6 className="text-theme uppercase font-bold mb-6">Company</h6>
+              <h6 className="text-blue-400 uppercase font-bold mb-6">Company</h6>
               <ul className="space-y-3">
-                <li><Link to="/about" className="hover:text-theme">About Us</Link></li>
-                <li><Link to="/contact" className="hover:text-theme">Contact Us</Link></li>
-                <li><a href="#" className="hover:text-theme">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-theme">Terms & Condition</a></li>
+                <li><Link to="/about" className="hover:text-blue-400">About Us</Link></li>
+                <li><Link to="/contact" className="hover:text-blue-400">Contact Us</Link></li>
+                <li><Link to="/apply" className="hover:text-blue-400">Apply Now</Link></li>
+                <li><a href="#" className="hover:text-blue-400">Privacy Policy</a></li>
+                <li><a href="#" className="hover:text-blue-400">Terms & Condition</a></li>
               </ul>
             </div>
 
             {/* Services Links */}
             <div>
-              <h6 className="text-theme uppercase font-bold mb-6">Services</h6>
+              <h6 className="text-blue-400 uppercase font-bold mb-6">Services</h6>
               <ul className="space-y-3">
-                <li><a href="#" className="hover:text-theme">Personalized Guidance</a></li>
-                <li><a href="#" className="hover:text-theme">Networking Opportunities</a></li>
-                <li><a href="#" className="hover:text-theme">Industry Insights</a></li>
-                <li><a href="#" className="hover:text-theme">Career Advancement</a></li>
-                <li><a href="#" className="hover:text-theme">Personal Growth</a></li>
+                <li><a href="#" className="hover:text-blue-400">Personalized Guidance</a></li>
+                <li><a href="#" className="hover:text-blue-400">Networking Opportunities</a></li>
+                <li><a href="#" className="hover:text-blue-400">Industry Insights</a></li>
+                <li><a href="#" className="hover:text-blue-400">Career Advancement</a></li>
+                <li><a href="#" className="hover:text-blue-400">Personal Growth</a></li>
               </ul>
             </div>
           </div>

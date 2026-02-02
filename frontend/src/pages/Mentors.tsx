@@ -11,7 +11,11 @@ interface Mentor {
   expertise_areas: string;
   availability: string;
   status: 'active' | 'inactive';
-  User: {
+  // new editable fields (optional if old DB still returns nested User)
+  first_name?: string;
+  last_name?: string;
+  email?: string;
+  User?: {
     first_name: string;
     last_name: string;
     email: string;
@@ -33,6 +37,10 @@ const Mentors = () => {
     expertise_areas: '',
     availability: '',
     status: 'active' as 'active' | 'inactive',
+    // new editable fields
+    first_name: '',
+    last_name: '',
+    email: '',
   });
   const [submitLoading, setSubmitLoading] = useState(false);
 
@@ -57,12 +65,15 @@ const Mentors = () => {
       setIsEditMode(true);
       setSelectedMentor(mentor);
       setFormData({
-        user_id: mentor.user_id.toString(),
+        user_id: mentor.user_id?.toString() || '',
         phone: mentor.phone || '',
         bio: mentor.bio || '',
         expertise_areas: mentor.expertise_areas || '',
         availability: mentor.availability || '',
         status: mentor.status,
+        first_name: mentor.first_name || mentor.User?.first_name || '',
+        last_name: mentor.last_name || mentor.User?.last_name || '',
+        email: mentor.email || mentor.User?.email || '',
       });
     } else {
       setIsEditMode(false);
@@ -74,6 +85,9 @@ const Mentors = () => {
         expertise_areas: '',
         availability: '',
         status: 'active',
+        first_name: '',
+        last_name: '',
+        email: '',
       });
     }
     setIsModalOpen(true);
@@ -91,6 +105,7 @@ const Mentors = () => {
 
     try {
       if (isEditMode && selectedMentor) {
+        // include editable name/email in payload
         await api.put(`/mentors/${selectedMentor.id}`, formData);
         setSuccess('Mentor updated successfully!');
       } else {
@@ -108,7 +123,8 @@ const Mentors = () => {
   };
 
   const handleDeactivate = async (mentor: Mentor) => {
-    if (!window.confirm(`Deactivate ${mentor.User.first_name} ${mentor.User.last_name}?`)) return;
+    const displayName = mentor.first_name || mentor.User?.first_name || 'Mentor';
+    if (!window.confirm(`Deactivate ${displayName} ${mentor.last_name || mentor.User?.last_name || ''}?`)) return;
 
     try {
       await api.put(`/mentors/${mentor.id}`, { status: 'inactive' });
@@ -258,18 +274,19 @@ const Mentors = () => {
                     <tr key={mentor.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm font-medium text-gray-900">
-                          {mentor.User.first_name} {mentor.User.last_name}
+                          {/* prefer editable fields, fall back to nested User */}
+                          {mentor.first_name || mentor.User?.first_name} {mentor.last_name || mentor.User?.last_name}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-500">{mentor.User.email}</div>
+                        <div className="text-sm text-gray-500">{mentor.email || mentor.User?.email}</div>
                       </td>
                       <td className="px-6 py-4">
                         <div className="text-sm text-gray-500">{mentor.expertise_areas || 'N/A'}</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span
-                          className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                          className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full $${/*template*/''}
                             mentor.status === 'active'
                               ? 'bg-green-100 text-green-800'
                               : 'bg-red-100 text-red-800'
@@ -308,9 +325,9 @@ const Mentors = () => {
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex-1">
                     <h3 className="font-semibold text-gray-900">
-                      {mentor.User.first_name} {mentor.User.last_name}
+                      {mentor.first_name || mentor.User?.first_name} {mentor.last_name || mentor.User?.last_name}
                     </h3>
-                    <p className="text-sm text-gray-500 mt-1">{mentor.User.email}</p>
+                    <p className="text-sm text-gray-500 mt-1">{mentor.email || mentor.User?.email}</p>
                   </div>
                   <span
                     className={`px-2 py-1 text-xs font-semibold rounded-full ${
@@ -402,6 +419,43 @@ const Mentors = () => {
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         required
                       />
+                    </div>
+
+                    {/* NEW: first_name, last_name, email */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">First name</label>
+                        <input
+                          type="text"
+                          name="first_name"
+                          value={formData.first_name}
+                          onChange={handleInputChange}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                          placeholder="First name"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Last name</label>
+                        <input
+                          type="text"
+                          name="last_name"
+                          value={formData.last_name}
+                          onChange={handleInputChange}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                          placeholder="Last name"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <input
+                          type="email"
+                          name="email"
+                          value={formData.email}
+                          onChange={handleInputChange}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                          placeholder="email@example.com"
+                        />
+                      </div>
                     </div>
 
                     <div>

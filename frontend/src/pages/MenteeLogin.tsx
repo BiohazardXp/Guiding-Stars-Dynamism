@@ -1,6 +1,7 @@
 // src/pages/MenteeLogin.tsx
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 import api from '../services/api';
 
 function MenteeLogin() {
@@ -9,6 +10,7 @@ function MenteeLogin() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const authContext = useContext(AuthContext);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,9 +25,13 @@ function MenteeLogin() {
 
       const { token, user } = response.data;
 
-      // Store token and user info
-      localStorage.setItem('mentee_token', token);
+      // Store user info
       localStorage.setItem('mentee_user', JSON.stringify(user));
+
+      // Use context login method with role
+      if (authContext) {
+        authContext.login(token, 'mentee');
+      }
 
       // Redirect to mentee dashboard
       navigate('/mentee/dashboard');
