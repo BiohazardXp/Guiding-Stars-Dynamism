@@ -2,17 +2,17 @@
 //import React from 'react';
 import { Link } from 'react-router-dom';
 
-// Import images (adjust paths based on your public/img folder)
-const horizontalLogo = ".../img/HORIZONTAL.png";
-const horizontalLogo2 = "./img/HORIZONTAL (2).png";
-const topBanner = "./img/Top-Bunner-1.jpg";
+// Import images (use root-relative public paths)
+const horizontalLogo = "/img/HORIZONTAL.png";
+const horizontalLogo2 = "/img/HORIZONTAL (2).png";
+const topBanner = "/img/Top-Bunner-1.jpg";
 
-// Team member images (add all from your img/TEAM folder)
-const twaambo = "./img/TEAM/twaambo_optimized.png";
-const lisa = "./img/TEAM/Lisa_optimized.png";
-const nangoma = "./img/TEAM/nangoma_optimized.png";
+// Team member images (use root-relative public paths)
+const twaambo = "/img/TEAM/twaambo_optimized.png";
+const lisa = "/img/TEAM/lisa_optimized.png";
+const nangoma = "/img/TEAM/nangoma_optimized.png";
 const grace = "/img/TEAM/grace_optimized.png";
-const rachael = "/img/TEAM/rachael_optimed.png";  // note: "optimed" might be typo — check spelling
+const rachael = "/img/TEAM/rachael_optimed.png";
 const edward = "/img/TEAM/edward_optimized.png";
 const pancrecious = "/img/TEAM/pancrecious_optimized.png";
 const solomon = "/img/TEAM/solomon_optimized.png";
@@ -32,7 +32,7 @@ const Team = () => {
   return (
     <div className="bg-white min-h-screen">
       {/* Header / Navbar */}
-      <header className="bg-navy text-white">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-gray-900 text-white shadow-lg">
         <div className="container mx-auto px-4">
           <div className="flex flex-wrap items-center justify-between py-4">
             {/* Logo */}
@@ -82,7 +82,7 @@ const Team = () => {
       </header>
 
       {/* Hero / Banner */}
-      <section className="relative">
+      <section className="relative mt-20">
         <img
           src={topBanner}
           alt="Team Banner"

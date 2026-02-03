@@ -5,7 +5,7 @@ const Contact = () => {
   return (
     <div className="bg-white min-h-screen">
       {/* Header / Navbar - consistent with Home & About */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-navy text-white shadow-lg">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-gray-900 text-white shadow-lg">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <Link to="/" className="flex items-center">
             <img src="/img/HORIZONTAL.png" alt="Guiding Stars" className="h-12" />
@@ -39,7 +39,7 @@ const Contact = () => {
       {/* Hero Section */}
       <section className="relative mt-20">
         <img
-          src="img/Top-Bunner-1.jpg"
+          src="/img/Top-Bunner-1.jpg"
           alt="Contact Banner"
           className="w-full h-[70vh] object-cover brightness-75"
         />
