@@ -53,9 +53,9 @@ const VerifyEmail = () => {
           {/* Success State */}
           {status === 'success' && (
             <div className="text-center">
-              <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-4">
+              <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-primary-100 mb-4">
                 <svg
-                  className="h-10 w-10 text-green-600"
+                  className="h-10 w-10 text-primary-600"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -70,8 +70,8 @@ const VerifyEmail = () => {
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-2">Success!</h3>
               <p className="text-gray-600 mb-6">{message}</p>
-              <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
-                <p className="text-sm text-green-800">
+              <div className="bg-primary-50 border border-primary-100 rounded-lg p-4 mb-4">
+                <p className="text-sm text-primary-800">
                   Your account is now active. Redirecting to login...
                 </p>
               </div>

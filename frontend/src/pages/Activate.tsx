@@ -77,12 +77,12 @@ function Activate() {
         <div className="bg-white rounded-lg shadow-xl p-8 border border-gray-100">
           {success ? (
             <div className="text-center animate-pulse">
-              <div className="inline-block p-4 bg-green-100 rounded-full mb-4">
-                <svg className="w-12 h-12 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div className="inline-block p-4 bg-primary-100 rounded-full mb-4">
+                <svg className="w-12 h-12 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <h2 className="text-2xl font-bold text-green-600 mb-2">Success!</h2>
+              <h2 className="text-2xl font-bold text-primary-600 mb-2">Success!</h2>
               <p className="text-gray-600 mb-4">{success}</p>
               <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
                 <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
@@ -129,9 +129,9 @@ function Activate() {
               {password && (
                 <div className="space-y-2">
                   <div className="flex gap-1 h-1.5">
-                    <div className={`flex-1 rounded-full ${password.length >= 1 ? (password.length < 6 ? 'bg-red-400' : password.length < 10 ? 'bg-yellow-400' : 'bg-green-500') : 'bg-gray-200'}`}></div>
-                    <div className={`flex-1 rounded-full ${password.length >= 6 ? (password.length < 10 ? 'bg-yellow-400' : 'bg-green-500') : 'bg-gray-200'}`}></div>
-                    <div className={`flex-1 rounded-full ${password.length >= 10 ? 'bg-green-500' : 'bg-gray-200'}`}></div>
+                    <div className={`flex-1 rounded-full ${password.length >= 1 ? (password.length < 6 ? 'bg-red-400' : password.length < 10 ? 'bg-yellow-400' : 'bg-primary-500') : 'bg-gray-200'}`}></div>
+                    <div className={`flex-1 rounded-full ${password.length >= 6 ? (password.length < 10 ? 'bg-yellow-400' : 'bg-primary-500') : 'bg-gray-200'}`}></div>
+                    <div className={`flex-1 rounded-full ${password.length >= 10 ? 'bg-primary-500' : 'bg-gray-200'}`}></div>
                   </div>
                   <p className="text-xs text-gray-500">
                     {password.length < 6 ? 'Weak' : password.length < 10 ? 'Medium' : 'Strong'} password

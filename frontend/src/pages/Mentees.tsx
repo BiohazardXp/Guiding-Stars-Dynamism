@@ -1,9 +1,9 @@
-// frontend/src/pages/Mentees.tsx
-import React, { useEffect, useState, Fragment, useContext } from 'react'; // Added useContext
+import React, { useEffect, useState, Fragment, useContext } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
+import { useSearchParams } from 'react-router-dom';
 import api from '../services/api';
 import Sidebar from '../components/Sidebar';
-import { AuthContext } from '../context/AuthContext'; // Import AuthContext
+import { AuthContext } from '../context/AuthContext';
 
 interface Mentee {
   id: number;
@@ -25,6 +25,8 @@ interface MentorOption {
   User: { first_name: string; last_name: string; email: string };
 }
 
+const STATUS_FILTERS = ['all', 'pending', 'approved', 'active', 'rejected'];
+
 const Mentees = () => {
   const [mentees, setMentees] = useState<Mentee[]>([]);
   const [mentors, setMentors] = useState<MentorOption[]>([]);
@@ -40,31 +42,32 @@ const Mentees = () => {
   });
   const [submitLoading, setSubmitLoading] = useState(false);
 
-  // 1. Access the token and loading state from context
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [activeFilter, setActiveFilter] = useState(
+    searchParams.get('status') || 'all'
+  );
+
   const context = useContext(AuthContext);
   const token = context?.token;
   const isAuthLoading = context?.isLoading;
 
   useEffect(() => {
-    // 2. Only fetch if Auth is finished and we have a token
-    if (!isAuthLoading && token) {
-      fetchData();
-    }
+    if (!isAuthLoading && token) fetchData();
   }, [token, isAuthLoading]);
+
+  useEffect(() => {
+    const param = searchParams.get('status');
+    if (param) setActiveFilter(param);
+  }, [searchParams]);
 
   const fetchData = async () => {
     setLoading(true);
     try {
-      // 3. Explicitly pass the token in headers for both requests
-      const config = {
-        headers: { Authorization: `Bearer ${token}` }
-      };
-
+      const config = { headers: { Authorization: `Bearer ${token}` } };
       const [menteesRes, mentorsRes] = await Promise.all([
         api.get('/mentees', config),
         api.get('/mentors', config),
       ]);
-
       setMentees(menteesRes.data.data || []);
       setMentors(mentorsRes.data.data || []);
       setError('');
@@ -79,6 +82,20 @@ const Mentees = () => {
     }
   };
 
+  const filteredMentees =
+    activeFilter === 'all'
+      ? mentees
+      : mentees.filter(m => m.application_status === activeFilter);
+
+  const handleFilterChange = (filter: string) => {
+    setActiveFilter(filter);
+    if (filter === 'all') {
+      setSearchParams({});
+    } else {
+      setSearchParams({ status: filter });
+    }
+  };
+
   const openModal = (mentee: Mentee) => {
     setSelectedMentee(mentee);
     setFormData({
@@ -89,24 +106,22 @@ const Mentees = () => {
     setIsModalOpen(true);
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLSelectElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedMentee || !token) return; // Ensure token is present
-
+    if (!selectedMentee || !token) return;
     setSubmitLoading(true);
     setError('');
-
     try {
-      // 4. Explicitly pass the token for the Update request
       await api.put(`/mentees/${selectedMentee.id}`, formData, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
       });
-      
       setSuccess('Mentee updated successfully!');
       setIsModalOpen(false);
       fetchData();
@@ -118,163 +133,223 @@ const Mentees = () => {
     }
   };
 
-  // 5. Loading guard for Auth check
+  const statusBadgeStyle = (status: string) => {
+    switch (status) {
+      case 'active':   return { background: 'rgba(255,145,72,0.15)', color: '#E8722E' };
+      case 'pending':  return { background: '#fef9c3', color: '#854d0e' };
+      case 'approved': return { background: '#dcfce7', color: '#166534' };
+      case 'rejected': return { background: '#fee2e2', color: '#991b1b' };
+      default:         return { background: '#f3f4f6', color: '#374151' };
+    }
+  };
+
+  const inputFocus = (
+    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    e.target.style.borderColor = '#FF9148';
+    e.target.style.boxShadow = '0 0 0 3px rgba(255,145,72,0.15)';
+  };
+  const inputBlur = (
+    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    e.target.style.borderColor = '#d1d5db';
+    e.target.style.boxShadow = 'none';
+  };
+
   if (isAuthLoading || (loading && mentees.length === 0)) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="text-gray-600">Loading mentees...</div>
+        <div
+          className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2"
+          style={{ borderColor: '#FF9148' }}
+        />
       </div>
     );
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    // overflow-x-hidden on the root prevents ANY child from causing page-wide scroll
+    <div className="flex min-h-screen bg-gray-50 overflow-x-hidden">
       <Sidebar />
 
-      <div className="flex-1">
-        <main className="max-w-7xl mx-auto p-4 md:p-6">
+      {/*
+        On mobile: full width (sidebar is fixed/overlaid, not in flow)
+        On desktop (lg+): offset by sidebar width w-64
+        overflow-x-hidden here too so nothing inside leaks out
+      */}
+      <div className="w-full lg:pl-64 overflow-x-hidden">
+        <main className="p-4 md:p-6 overflow-x-hidden">
+
           {/* Header */}
           <div className="mb-6 md:mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-800">Mentees & Applications</h2>
-            <p className="text-gray-600 mt-2">Manage mentee applications and assignments</p>
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-800">
+              Mentees & Applications
+            </h2>
+            <p className="text-gray-500 mt-2">
+              Manage mentee applications and assignments
+            </p>
           </div>
 
-          {/* Alert Messages */}
+          {/* Alerts */}
           {error && (
             <div className="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center justify-between">
-              <span className="text-sm md:text-base">{error}</span>
-              <button onClick={() => setError('')} className="text-red-700 hover:text-red-900 text-xl">×</button>
+              <span className="text-sm">{error}</span>
+              <button
+                onClick={() => setError('')}
+                className="text-red-700 hover:text-red-900 text-xl ml-4 flex-shrink-0"
+              >
+                ×
+              </button>
             </div>
           )}
-
           {success && (
-            <div className="mb-6 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg flex items-center justify-between">
-              <span className="text-sm md:text-base">{success}</span>
-              <button onClick={() => setSuccess('')} className="text-green-700 hover:text-green-900 text-xl">×</button>
+            <div
+              className="mb-6 border px-4 py-3 rounded-lg flex items-center justify-between"
+              style={{
+                background: 'rgba(255,145,72,0.1)',
+                borderColor: 'rgba(255,145,72,0.3)',
+                color: '#E8722E',
+              }}
+            >
+              <span className="text-sm">{success}</span>
+              <button
+                onClick={() => setSuccess('')}
+                className="text-xl ml-4 flex-shrink-0"
+                style={{ color: '#E8722E' }}
+              >
+                ×
+              </button>
             </div>
           )}
 
           {/* Stats Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-6 md:mb-8">
-            <div className="bg-white p-4 md:p-6 rounded-lg shadow-md">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600">Total Mentees</p>
-                  <p className="text-2xl md:text-3xl font-bold text-gray-800">{mentees.length}</p>
-                </div>
-                <div className="bg-indigo-100 p-3 rounded-full">
-                  <svg className="w-6 h-6 md:w-8 md:h-8 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                  </svg>
-                </div>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6 md:mb-8">
+            {[
+              { label: 'Total', value: mentees.length, color: '#1f2937' },
+              {
+                label: 'Pending',
+                value: mentees.filter(m => m.application_status === 'pending').length,
+                color: '#ca8a04',
+              },
+              {
+                label: 'Active',
+                value: mentees.filter(m => m.application_status === 'active').length,
+                color: '#FF9148',
+              },
+              {
+                label: 'Approved',
+                value: mentees.filter(m => m.application_status === 'approved').length,
+                color: '#16a34a',
+              },
+            ].map(({ label, value, color }) => (
+              <div key={label} className="bg-white p-4 rounded-lg shadow-md min-w-0">
+                <p className="text-sm text-gray-500 truncate">{label}</p>
+                <p className="text-2xl font-bold mt-1" style={{ color }}>
+                  {value}
+                </p>
               </div>
-            </div>
+            ))}
+          </div>
 
-            <div className="bg-white p-4 md:p-6 rounded-lg shadow-md">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600">Pending</p>
-                  <p className="text-2xl md:text-3xl font-bold text-yellow-600">
-                    {mentees.filter(m => m.application_status === 'pending').length}
-                  </p>
-                </div>
-                <div className="bg-yellow-100 p-3 rounded-full">
-                  <svg className="w-6 h-6 md:w-8 md:h-8 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white p-4 md:p-6 rounded-lg shadow-md">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600">Active</p>
-                  <p className="text-2xl md:text-3xl font-bold text-green-600">
-                    {mentees.filter(m => m.application_status === 'active').length}
-                  </p>
-                </div>
-                <div className="bg-green-100 p-3 rounded-full">
-                  <svg className="w-6 h-6 md:w-8 md:h-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white p-4 md:p-6 rounded-lg shadow-md">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600">Approved</p>
-                  <p className="text-2xl md:text-3xl font-bold text-blue-600">
-                    {mentees.filter(m => m.application_status === 'approved').length}
-                  </p>
-                </div>
-                <div className="bg-blue-100 p-3 rounded-full">
-                  <svg className="w-6 h-6 md:w-8 md:h-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                </div>
-              </div>
+          {/* Filter Tabs */}
+          <div className="bg-white rounded-lg shadow-md mb-6">
+            <div className="flex flex-wrap border-b border-gray-200">
+              {STATUS_FILTERS.map(filter => (
+                <button
+                  key={filter}
+                  onClick={() => handleFilterChange(filter)}
+                  className="px-4 py-3 text-sm font-medium capitalize transition-colors whitespace-nowrap"
+                  style={
+                    activeFilter === filter
+                      ? { borderBottom: '2px solid #FF9148', color: '#FF9148' }
+                      : { color: '#6b7280' }
+                  }
+                >
+                  {filter === 'all'
+                    ? `All (${mentees.length})`
+                    : `${filter} (${
+                        mentees.filter(m => m.application_status === filter).length
+                      })`}
+                </button>
+              ))}
             </div>
           </div>
 
           {/* Mentees List */}
-          {mentees.length === 0 ? (
-            <div className="bg-white rounded-lg shadow-md p-8 md:p-12 text-center">
-              <svg className="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+          {filteredMentees.length === 0 ? (
+            <div className="bg-white rounded-lg shadow-md p-8 text-center">
+              <svg
+                className="mx-auto h-12 w-12 text-gray-300 mb-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                />
               </svg>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No mentees or applications yet</h3>
-              <p className="text-gray-500">Applications will appear here once submitted</p>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                No {activeFilter === 'all' ? '' : activeFilter} mentees found
+              </h3>
+              {activeFilter !== 'all' && (
+                <button
+                  className="underline"
+                  style={{ color: '#FF9148' }}
+                  onClick={() => handleFilterChange('all')}
+                >
+                  View all mentees
+                </button>
+              )}
             </div>
           ) : (
             <>
-              {/* Desktop Table View */}
+              {/* Desktop Table */}
               <div className="hidden md:block bg-white rounded-xl shadow-md overflow-hidden">
                 <div className="overflow-x-auto">
-                  <table className="min-w-full divide-y divide-gray-200">
+                  <table className="w-full divide-y divide-gray-200" style={{ tableLayout: 'fixed' }}>
                     <thead className="bg-gray-50">
                       <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Goals</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/5">Name</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/5">Email</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/6">Status</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/5">Goals</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/6">Actions</th>
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
-                      {mentees.map((mentee) => (
+                      {filteredMentees.map(mentee => (
                         <tr key={mentee.id} className="hover:bg-gray-50">
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm font-medium text-gray-900">
-                              {mentee.first_name} {mentee.last_name}
-                            </div>
+                          <td className="px-4 py-4 text-sm font-medium text-gray-900 truncate">
+                            {mentee.first_name} {mentee.last_name}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-gray-500">{mentee.email}</div>
+                          <td className="px-4 py-4 text-sm text-gray-500 truncate">
+                            {mentee.email}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
+                          <td className="px-4 py-4">
                             <span
-                              className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                                mentee.application_status === 'active' ? 'bg-green-100 text-green-800' :
-                                mentee.application_status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                                mentee.application_status === 'approved' ? 'bg-blue-100 text-blue-800' :
-                                'bg-red-100 text-red-800'
-                              }`}
+                              className="px-2 py-1 text-xs font-semibold rounded-full whitespace-nowrap"
+                              style={statusBadgeStyle(mentee.application_status)}
                             >
                               {mentee.application_status.toUpperCase()}
                             </span>
                           </td>
-                          <td className="px-6 py-4">
-                            <div className="text-sm text-gray-500">
-                              {mentee.goals?.substring(0, 60) || 'N/A'}...
-                            </div>
+                          <td className="px-4 py-4 text-sm text-gray-500 truncate">
+                            {mentee.goals?.substring(0, 60) || 'N/A'}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                          <td className="px-4 py-4 text-sm font-medium">
                             <button
                               onClick={() => openModal(mentee)}
-                              className="text-indigo-600 hover:text-indigo-900"
+                              className="font-semibold transition whitespace-nowrap"
+                              style={{ color: '#FF9148' }}
+                              onMouseEnter={e =>
+                                (e.currentTarget.style.color = '#E8722E')
+                              }
+                              onMouseLeave={e =>
+                                (e.currentTarget.style.color = '#FF9148')
+                              }
                             >
                               View / Update
                             </button>
@@ -286,47 +361,36 @@ const Mentees = () => {
                 </div>
               </div>
 
-              {/* Mobile Card View */}
+              {/* Mobile Cards */}
               <div className="md:hidden space-y-4">
-                {mentees.map((mentee) => (
+                {filteredMentees.map(mentee => (
                   <div key={mentee.id} className="bg-white rounded-lg shadow-md p-4">
                     <div className="flex items-start justify-between mb-3">
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-gray-900">
+                      <div className="min-w-0 flex-1">
+                        <h3 className="font-semibold text-gray-900 truncate">
                           {mentee.first_name} {mentee.last_name}
                         </h3>
-                        <p className="text-sm text-gray-500 mt-1">{mentee.email}</p>
+                        <p className="text-sm text-gray-500 mt-1 truncate">
+                          {mentee.email}
+                        </p>
                       </div>
                       <span
-                        className={`px-2 py-1 text-xs font-semibold rounded-full whitespace-nowrap ml-2 ${
-                          mentee.application_status === 'active' ? 'bg-green-100 text-green-800' :
-                          mentee.application_status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                          mentee.application_status === 'approved' ? 'bg-blue-100 text-blue-800' :
-                          'bg-red-100 text-red-800'
-                        }`}
+                        className="px-2 py-1 text-xs font-semibold rounded-full whitespace-nowrap ml-2 flex-shrink-0"
+                        style={statusBadgeStyle(mentee.application_status)}
                       >
                         {mentee.application_status.toUpperCase()}
                       </span>
                     </div>
-
-                    <div className="space-y-2 mb-4">
-                      {mentee.phone && (
-                        <div>
-                          <p className="text-xs text-gray-500">Phone</p>
-                          <p className="text-sm text-gray-900">{mentee.phone}</p>
-                        </div>
-                      )}
-                      <div>
-                        <p className="text-xs text-gray-500">Goals</p>
-                        <p className="text-sm text-gray-900">
-                          {mentee.goals?.substring(0, 80) || 'N/A'}...
-                        </p>
-                      </div>
+                    <div className="mb-4">
+                      <p className="text-xs text-gray-500">Goals</p>
+                      <p className="text-sm text-gray-900 line-clamp-2">
+                        {mentee.goals || 'N/A'}
+                      </p>
                     </div>
-
                     <button
                       onClick={() => openModal(mentee)}
-                      className="w-full bg-indigo-50 text-indigo-600 px-4 py-2 rounded-lg hover:bg-indigo-100 transition text-sm font-medium"
+                      className="w-full py-2 rounded-lg text-sm font-semibold text-white transition"
+                      style={{ background: 'linear-gradient(135deg, #FF9148, #E8722E)' }}
                     >
                       View / Update
                     </button>
@@ -336,9 +400,13 @@ const Mentees = () => {
             </>
           )}
 
-          {/* Modal for View/Update Mentee */}
+          {/* Modal */}
           <Transition appear show={isModalOpen} as={Fragment}>
-            <Dialog as="div" className="relative z-50" onClose={() => setIsModalOpen(false)}>
+            <Dialog
+              as="div"
+              className="relative z-50"
+              onClose={() => setIsModalOpen(false)}
+            >
               <Transition.Child
                 as={Fragment}
                 enter="ease-out duration-300"
@@ -348,11 +416,11 @@ const Mentees = () => {
                 leaveFrom="opacity-100"
                 leaveTo="opacity-0"
               >
-                <div className="fixed inset-0 bg-black bg-opacity-25" />
+                <div className="fixed inset-0 bg-black bg-opacity-30" />
               </Transition.Child>
 
               <div className="fixed inset-0 overflow-y-auto">
-                <div className="flex min-h-full items-center justify-center p-4 text-center">
+                <div className="flex min-h-full items-center justify-center p-4">
                   <Transition.Child
                     as={Fragment}
                     enter="ease-out duration-300"
@@ -362,55 +430,69 @@ const Mentees = () => {
                     leaveFrom="opacity-100 scale-100"
                     leaveTo="opacity-0 scale-95"
                   >
-                    <Dialog.Panel className="w-full max-w-lg transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                      <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-900 mb-4">
-                        Update Mentee Application
-                      </Dialog.Title>
+                    <Dialog.Panel className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-xl">
+
+                      {/* Modal Header */}
+                      <div
+                        className="rounded-xl p-4 mb-6 text-white"
+                        style={{ background: 'linear-gradient(135deg, #FF9148, #E8722E)' }}
+                      >
+                        <Dialog.Title as="h3" className="text-lg font-bold">
+                          Update Mentee Application
+                        </Dialog.Title>
+                        {selectedMentee && (
+                          <p className="text-sm opacity-90 mt-1">
+                            {selectedMentee.first_name} {selectedMentee.last_name}
+                          </p>
+                        )}
+                      </div>
 
                       {selectedMentee && (
                         <form onSubmit={handleSubmit} className="space-y-4">
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+                          <div className="grid grid-cols-2 gap-4 text-sm">
                             <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-                              <p className="text-sm text-gray-900">
-                                {selectedMentee.first_name} {selectedMentee.last_name}
-                              </p>
+                              <p className="text-xs text-gray-500 mb-1">Email</p>
+                              <p className="text-gray-800 break-all">{selectedMentee.email}</p>
                             </div>
                             <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                              <p className="text-sm text-gray-900">{selectedMentee.email}</p>
+                              <p className="text-xs text-gray-500 mb-1">Phone</p>
+                              <p className="text-gray-800">{selectedMentee.phone || 'N/A'}</p>
                             </div>
                           </div>
 
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
-                            <p className="text-sm text-gray-900">{selectedMentee.phone || 'N/A'}</p>
-                          </div>
+                          {selectedMentee.background && (
+                            <div>
+                              <p className="text-xs text-gray-500 mb-1">Background</p>
+                              <p className="text-sm text-gray-800">{selectedMentee.background}</p>
+                            </div>
+                          )}
 
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Background</label>
-                            <p className="text-sm text-gray-900">{selectedMentee.background || 'N/A'}</p>
-                          </div>
+                          {selectedMentee.goals && (
+                            <div>
+                              <p className="text-xs text-gray-500 mb-1">Goals</p>
+                              <p className="text-sm text-gray-800">{selectedMentee.goals}</p>
+                            </div>
+                          )}
 
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Goals</label>
-                            <p className="text-sm text-gray-900">{selectedMentee.goals || 'N/A'}</p>
-                          </div>
+                          {selectedMentee.preferences && (
+                            <div>
+                              <p className="text-xs text-gray-500 mb-1">Preferences</p>
+                              <p className="text-sm text-gray-800">{selectedMentee.preferences}</p>
+                            </div>
+                          )}
 
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Preferences</label>
-                            <p className="text-sm text-gray-900">{selectedMentee.preferences || 'N/A'}</p>
-                          </div>
-
-                          <div>
+                          <div className="border-t border-gray-100 pt-4">
                             <label className="block text-sm font-medium text-gray-700 mb-1">
-                              Current Status <span className="text-red-500">*</span>
+                              Status <span className="text-red-500">*</span>
                             </label>
                             <select
                               name="application_status"
                               value={formData.application_status}
                               onChange={handleInputChange}
-                              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                              onFocus={inputFocus}
+                              onBlur={inputBlur}
+                              className="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none transition"
                             >
                               <option value="pending">Pending</option>
                               <option value="approved">Approved</option>
@@ -421,15 +503,19 @@ const Mentees = () => {
                           </div>
 
                           <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Assign Mentor</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              Assign Mentor
+                            </label>
                             <select
                               name="mentor_id"
                               value={formData.mentor_id}
                               onChange={handleInputChange}
-                              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                              onFocus={inputFocus}
+                              onBlur={inputBlur}
+                              className="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none transition"
                             >
                               <option value="">No mentor assigned</option>
-                              {mentors.map((m) => (
+                              {mentors.map(m => (
                                 <option key={m.id} value={m.id}>
                                   {m.User.first_name} {m.User.last_name} ({m.User.email})
                                 </option>
@@ -438,33 +524,39 @@ const Mentees = () => {
                           </div>
 
                           <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Admin Notes</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              Admin Notes
+                            </label>
                             <textarea
                               name="notes"
                               value={formData.notes}
                               onChange={handleInputChange}
-                              rows={4}
-                              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                              placeholder="Internal notes, updates, reasons for status change..."
+                              onFocus={inputFocus}
+                              onBlur={inputBlur}
+                              rows={3}
+                              className="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none transition resize-none"
+                              placeholder="Internal notes, reasons for status change..."
                             />
                           </div>
 
-                          <div className="flex flex-col-reverse sm:flex-row gap-3 mt-6">
+                          <div className="flex gap-3 pt-2">
                             <button
                               type="button"
-                              className="w-full sm:w-auto px-6 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition"
                               onClick={() => setIsModalOpen(false)}
+                              className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition font-medium"
                             >
                               Cancel
                             </button>
                             <button
                               type="submit"
                               disabled={submitLoading}
-                              className="w-full sm:w-auto px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                              className="flex-1 px-4 py-2 text-white rounded-lg font-medium transition disabled:opacity-50"
+                              style={{ background: 'linear-gradient(135deg, #FF9148, #E8722E)' }}
                             >
                               {submitLoading ? 'Saving...' : 'Update Mentee'}
                             </button>
                           </div>
+
                         </form>
                       )}
                     </Dialog.Panel>
@@ -473,6 +565,7 @@ const Mentees = () => {
               </div>
             </Dialog>
           </Transition>
+
         </main>
       </div>
     </div>

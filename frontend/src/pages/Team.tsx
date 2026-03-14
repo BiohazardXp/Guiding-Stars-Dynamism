@@ -3,7 +3,6 @@
 import { Link } from 'react-router-dom';
 
 // Import images (use root-relative public paths)
-const horizontalLogo = "/img/HORIZONTAL.png";
 const horizontalLogo2 = "/img/HORIZONTAL (2).png";
 const topBanner = "/img/Top-Bunner-1.jpg";
 
@@ -31,58 +30,10 @@ const teamMembers = [
 const Team = () => {
   return (
     <div className="bg-white min-h-screen">
-      {/* Header / Navbar */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-gray-900 text-white shadow-lg">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-wrap items-center justify-between py-4">
-            {/* Logo */}
-            <Link to="/" className="flex items-center">
-              <img src={horizontalLogo} alt="Guiding Stars" className="h-12" />
-            </Link>
-
-            {/* Mobile toggle (you can make this functional with state if needed) */}
-            <button className="lg:hidden text-white focus:outline-none" aria-label="Toggle navigation">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
-
-            {/* Nav Links */}
-            <nav className="hidden lg:flex lg:items-center lg:space-x-8">
-              <Link to="/" className="hover:text-indigo-300 font-semibold">Home</Link>
-              <Link to="/about" className="hover:text-indigo-300 font-semibold">About</Link>
-              <Link to="/team" className="text-indigo-300 font-bold">Team</Link>
-              <Link to="/contact" className="hover:text-indigo-300 font-semibold">Contact Us</Link>
-
-              {/* Events Dropdown */}
-              <div className="relative group">
-                <button className="hover:text-indigo-300 font-semibold flex items-center">
-                  Events
-                  <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-                <div className="absolute hidden group-hover:block bg-white text-gray-800 shadow-lg rounded mt-2 min-w-[180px]">
-                  <Link to="/graduation" className="block px-4 py-2 hover:bg-gray-100">
-                    First Cohort Graduation
-                  </Link>
-                </div>
-              </div>
-            </nav>
-
-            {/* Enquire Button */}
-            <a
-              href="#contact"
-              className="hidden lg:inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded transition"
-            >
-              ENQUIRE NOW <i className="fas fa-arrow-right ml-2"></i>
-            </a>
-          </div>
-        </div>
-      </header>
+      {/* Navbar is provided globally by the Navbar component */}
 
       {/* Hero / Banner */}
-      <section className="relative mt-20">
+  <section className="relative">
         <img
           src={topBanner}
           alt="Team Banner"

@@ -5,6 +5,7 @@ import { AuthContext } from './context/AuthContext';
 
 // Pages & Components
 import Sidebar from './components/Sidebar';
+import Navbar from './components/Navbar';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Home from './pages/Home';
@@ -102,6 +103,13 @@ function MenteeLayout({ children }: { children: JSX.Element }) {
 }
 
 /**
+ * PublicLayout: Adds top padding so the fixed Navbar doesn't overlap page content
+ */
+function PublicLayout({ children }: { children: JSX.Element }) {
+  return <div className="pt-20">{children}</div>;
+}
+
+/**
  * Root Traffic Controller
  */
 function RootRedirect() {
@@ -125,18 +133,19 @@ function RootRedirect() {
 function App() {
   return (
     <Router>
+      <Navbar />
       <Routes>
         {/* Public routes */}
-        <Route path="/home" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/activate/:token" element={<Activate />} />
-        <Route path="/apply" element={<ApplyPage />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/graduation" element={<Graduation />} />
-        <Route path="/team" element={<Team />} />
-        <Route path="/verify-email" element={<VerifyEmail />} />
-        <Route path="/resend-verification" element={<ResendVerification />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
+  <Route path="/home" element={<PublicLayout><Home /></PublicLayout>} />
+  <Route path="/about" element={<PublicLayout><About /></PublicLayout>} />
+  <Route path="/activate/:token" element={<PublicLayout><Activate /></PublicLayout>} />
+  <Route path="/apply" element={<PublicLayout><ApplyPage /></PublicLayout>} />
+  <Route path="/contact" element={<PublicLayout><Contact /></PublicLayout>} />
+  <Route path="/graduation" element={<PublicLayout><Graduation /></PublicLayout>} />
+  <Route path="/team" element={<PublicLayout><Team /></PublicLayout>} />
+  <Route path="/verify-email" element={<PublicLayout><VerifyEmail /></PublicLayout>} />
+  <Route path="/resend-verification" element={<PublicLayout><ResendVerification /></PublicLayout>} />
+  <Route path="/forgot-password" element={<PublicLayout><ForgotPassword /></PublicLayout>} />
 
         {/* Guest routes */}
         <Route path="/login" element={<GuestRoute><Login /></GuestRoute>} />

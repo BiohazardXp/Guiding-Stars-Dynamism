@@ -8,62 +8,10 @@ const Home = () => {
 
   return (
     <div className="bg-white">
-      {/* Header / Navbar - FIXED with solid background */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-gray-900 text-white shadow-lg">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          {/* Logo */}
-          <Link to="/" className="flex items-center">
-            <img src="/img/HORIZONTAL.png" alt="Guiding Stars" className="h-12" />
-          </Link>
+      {/* Navbar is provided globally by the Navbar component */}
 
-          {/* Mobile menu button */}
-          <button className="lg:hidden text-white focus:outline-none">
-            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
-
-          {/* Desktop Menu */}
-          <nav className="hidden lg:flex space-x-6 items-center">
-            <Link to="/" className="font-semibold hover:text-blue-400 transition">Home</Link>
-            <Link to="/about" className="font-semibold hover:text-blue-400 transition">About</Link>
-            <Link to="/team" className="font-semibold hover:text-blue-400 transition">Team</Link>
-            <Link to="/contact" className="font-semibold hover:text-blue-400 transition">Contact Us</Link>
-
-            {/* Events Dropdown */}
-            <div className="relative group">
-              <button className="font-semibold hover:text-blue-400 transition flex items-center">
-                Events <span className="ml-1">▼</span>
-              </button>
-              <div className="absolute hidden group-hover:block bg-white text-gray-800 shadow-lg rounded mt-2 w-48">
-                <Link to="/graduation" className="block px-4 py-2 hover:bg-gray-100">First Cohort Graduation</Link>
-              </div>
-            </div>
-
-            {/* Apply Now Button */}
-            <Link
-              to="/apply"
-              className="bg-green-600 text-white px-6 py-2.5 rounded-lg font-semibold hover:bg-green-700 transition"
-            >
-              APPLY NOW
-            </Link>
-
-            {/* Admin Login - Discrete link */}
-            <Link
-              to="/login"
-              className="text-gray-400 hover:text-white text-sm transition"
-              title="Admin Login"
-            >
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-              </svg>
-            </Link>
-          </nav>
-        </div>
-      </header>
-
-      {/* Carousel / Hero Section */}
-      <section className="relative mt-20">
+      {/* Hero Section */}
+  <section className="relative">
         <div className="relative">
           <img
             src="/img/Top-Bunner-1.jpg"
@@ -72,7 +20,8 @@ const Home = () => {
           />
           <div className="absolute inset-0 flex items-center justify-center text-center text-white px-6">
             <div className="max-w-4xl">
-              <h6 className="text-xl md:text-2xl font-semibold uppercase mb-4 animate-fade-in-down">
+              <h6 className="text-xl md:text-2xl font-semibold uppercase mb-4 animate-fade-in-down"
+                  style={{ color: '#FF9148' }}>
                 Ignite Success
               </h6>
               <h1 className="text-4xl md:text-6xl font-bold mb-8 animate-fade-in-down">
@@ -81,10 +30,12 @@ const Home = () => {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
                   to="/apply"
-                  className="bg-green-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-green-700 transition shadow-lg"
+                  className="text-white px-8 py-4 rounded-lg font-semibold transition shadow-lg"
+                  style={{ background: 'linear-gradient(135deg, #FF9148, #E8722E)' }}
                 >
                   APPLY NOW
                 </Link>
+                
                 <a
                   href="#contact"
                   className="bg-white text-gray-900 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition shadow-lg"
@@ -101,17 +52,16 @@ const Home = () => {
       <section id="about" className="py-16 bg-gray-50">
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-12">
-            Welcome to <span className="text-blue-600 uppercase">Guiding Stars</span>
+            Welcome to{' '}
+            <span className="uppercase" style={{ color: '#FF9148' }}>Guiding Stars</span>
           </h2>
 
           <div className="grid md:grid-cols-2 gap-12 items-center">
-            {/* Images */}
             <div className="grid grid-cols-2 gap-6">
               <img src="/img/_MG_6217-1.jpg" alt="About 1" className="rounded-lg shadow-lg" />
               <img src="/img/image 2.png" alt="About 2" className="rounded-lg shadow-lg" />
             </div>
 
-            {/* Text */}
             <div className="space-y-6">
               <p className="text-lg text-gray-700 leading-relaxed">
                 Guiding Stars stands as a beacon of excellence in corporate and business education. A non-profit, Zambia-based organization committed to nurturing the next generation of leaders.
@@ -122,7 +72,8 @@ const Home = () => {
               <div className="text-center md:text-left">
                 <Link
                   to="/about"
-                  className="inline-block bg-blue-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-blue-700 transition"
+                  className="inline-block text-white px-8 py-4 rounded-lg font-semibold transition"
+                  style={{ background: 'linear-gradient(135deg, #FF9148, #E8722E)' }}
                 >
                   Read More
                 </Link>
@@ -133,12 +84,13 @@ const Home = () => {
       </section>
 
       {/* Services Section */}
-      <section id="services" className="py-16">
+      <section id="services" className="py-16 bg-white">
         <div className="container mx-auto px-6">
           <div className="text-center mb-12">
-            <h6 className="text-blue-600 uppercase text-lg font-semibold">Our Services</h6>
+            <h6 className="uppercase text-lg font-semibold" style={{ color: '#FF9148' }}>Our Services</h6>
             <h2 className="text-4xl font-bold mt-2">
-              Explore Our <span className="text-blue-600 uppercase">Services</span>
+              Explore Our{' '}
+              <span className="uppercase" style={{ color: '#FF9148' }}>Services</span>
             </h2>
           </div>
 
@@ -152,12 +104,12 @@ const Home = () => {
             ].map((service, idx) => (
               <div
                 key={idx}
-                className="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition transform hover:-translate-y-2"
+                className="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition transform hover:-translate-y-2 border border-gray-100"
               >
-                <div className="text-blue-600 text-5xl mb-6">
+                <div className="text-5xl mb-6" style={{ color: '#FF9148' }}>
                   <i className={`fa ${service.icon}`}></i>
                 </div>
-                <h5 className="text-xl font-bold mb-4">{service.title}</h5>
+                <h5 className="text-xl font-bold mb-4 text-gray-800">{service.title}</h5>
                 <p className="text-gray-600">{service.desc}</p>
               </div>
             ))}
@@ -165,16 +117,20 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Call to Action - Application Section */}
-      <section className="py-16 bg-gradient-to-r from-blue-600 to-blue-800 text-white">
+      {/* Call to Action Section */}
+      <section
+        className="py-16 text-white"
+        style={{ background: 'linear-gradient(135deg, #FF9148 0%, #E8722E 100%)' }}
+      >
         <div className="container mx-auto px-6 text-center">
           <h2 className="text-4xl font-bold mb-6">Ready to Start Your Journey?</h2>
-          <p className="text-xl mb-8 max-w-2xl mx-auto">
+          <p className="text-xl mb-8 max-w-2xl mx-auto opacity-90">
             Join the next cohort of ambitious professionals and transform your career with personalized mentorship.
           </p>
           <Link
             to="/apply"
-            className="inline-block bg-white text-blue-600 px-12 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition shadow-lg"
+            className="inline-block bg-white px-12 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition shadow-lg"
+            style={{ color: '#E8722E' }}
           >
             APPLY FOR MENTORSHIP
           </Link>
@@ -185,9 +141,10 @@ const Home = () => {
       <section id="contact" className="py-16 bg-gray-100">
         <div className="container mx-auto px-6">
           <div className="text-center mb-12">
-            <h6 className="text-blue-600 uppercase text-lg font-semibold">CONTACT</h6>
+            <h6 className="uppercase text-lg font-semibold" style={{ color: '#FF9148' }}>CONTACT</h6>
             <h2 className="text-4xl font-bold mt-2">
-              GET IN <span className="text-blue-600 uppercase">TOUCH</span>
+              GET IN{' '}
+              <span className="uppercase" style={{ color: '#FF9148' }}>TOUCH</span>
             </h2>
           </div>
 
@@ -199,21 +156,28 @@ const Home = () => {
                   name="name"
                   placeholder="YOUR NAME..."
                   required
-                  className="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  className="w-full p-4 border rounded-lg focus:outline-none transition"
+                  style={{ '--tw-ring-color': '#FF9148' } as React.CSSProperties}
+                  onFocus={(e) => (e.target.style.borderColor = '#FF9148')}
+                  onBlur={(e) => (e.target.style.borderColor = '#d1d5db')}
                 />
                 <input
                   type="email"
                   name="email"
                   placeholder="YOUR EMAIL..."
                   required
-                  className="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  className="w-full p-4 border rounded-lg focus:outline-none transition"
+                  onFocus={(e) => (e.target.style.borderColor = '#FF9148')}
+                  onBlur={(e) => (e.target.style.borderColor = '#d1d5db')}
                 />
                 <input
                   type="text"
                   name="subject"
                   placeholder="SUBJECT..."
                   required
-                  className="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  className="w-full p-4 border rounded-lg focus:outline-none transition"
+                  onFocus={(e) => (e.target.style.borderColor = '#FF9148')}
+                  onBlur={(e) => (e.target.style.borderColor = '#d1d5db')}
                 />
               </div>
 
@@ -222,12 +186,15 @@ const Home = () => {
                 placeholder="YOUR MESSAGE..."
                 required
                 rows={6}
-                className="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 mb-6"
+                className="w-full p-4 border rounded-lg focus:outline-none transition mb-6"
+                onFocus={(e) => (e.target.style.borderColor = '#FF9148')}
+                onBlur={(e) => (e.target.style.borderColor = '#d1d5db')}
               ></textarea>
 
               <button
                 type="submit"
-                className="w-full bg-blue-600 text-white py-4 rounded-lg font-semibold hover:bg-blue-700 transition"
+                className="w-full text-white py-4 rounded-lg font-semibold transition"
+                style={{ background: 'linear-gradient(135deg, #FF9148, #E8722E)' }}
               >
                 SEND MESSAGE NOW
               </button>
@@ -241,7 +208,8 @@ const Home = () => {
         <div className="container mx-auto px-6">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold">
-              What Our <span className="text-blue-400 uppercase">Students Say</span>
+              What Our{' '}
+              <span className="uppercase" style={{ color: '#FF9148' }}>Students Say</span>
             </h2>
           </div>
 
@@ -271,7 +239,7 @@ const Home = () => {
                   <img src={testimonial.img} alt={testimonial.name} className="w-20 h-24 object-cover rounded-lg mr-4" />
                   <div>
                     <h6 className="font-bold">{testimonial.name}</h6>
-                    <small className="text-gray-600">{testimonial.role}</small>
+                    <small className="text-gray-500">{testimonial.role}</small>
                   </div>
                 </div>
                 <p className="italic text-gray-700">{testimonial.quote}</p>
@@ -285,49 +253,42 @@ const Home = () => {
       <footer className="bg-gray-900 text-white py-16">
         <div className="container mx-auto px-6">
           <div className="grid md:grid-cols-4 gap-12">
-            {/* Logo & Description */}
             <div>
               <img src="/img/HORIZONTAL (2).png" alt="Guiding Stars" className="h-16 mb-6" />
               <p className="text-gray-300">Nurture Brilliance, Ignite Success.</p>
               <div className="mt-6">
-                <Link
-                  to="/login"
-                  className="text-sm text-gray-400 hover:text-white transition"
-                >
+                <Link to="/login" className="text-sm text-gray-400 hover:text-white transition">
                   Staff Login
                 </Link>
               </div>
             </div>
 
-            {/* Contact */}
             <div>
-              <h6 className="text-blue-400 uppercase font-bold mb-6">Contact</h6>
-              <p className="mb-4"><i className="fa fa-map-marker-alt mr-3"></i>Plot 25866 Kabangwe, off Great North Road, Lusaka.</p>
-              <p className="mb-4"><i className="fa fa-phone-alt mr-3"></i>+260 973 223 910</p>
-              <p><i className="fa fa-envelope mr-3"></i>info@guidingstars.com</p>
+              <h6 className="uppercase font-bold mb-6" style={{ color: '#FF9148' }}>Contact</h6>
+              <p className="mb-4 text-gray-300"><i className="fa fa-map-marker-alt mr-3"></i>Plot 25866 Kabangwe, off Great North Road, Lusaka.</p>
+              <p className="mb-4 text-gray-300"><i className="fa fa-phone-alt mr-3"></i>+260 973 223 910</p>
+              <p className="text-gray-300"><i className="fa fa-envelope mr-3"></i>info@guidingstars.com</p>
             </div>
 
-            {/* Company Links */}
             <div>
-              <h6 className="text-blue-400 uppercase font-bold mb-6">Company</h6>
-              <ul className="space-y-3">
-                <li><Link to="/about" className="hover:text-blue-400">About Us</Link></li>
-                <li><Link to="/contact" className="hover:text-blue-400">Contact Us</Link></li>
-                <li><Link to="/apply" className="hover:text-blue-400">Apply Now</Link></li>
-                <li><a href="#" className="hover:text-blue-400">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-blue-400">Terms & Condition</a></li>
+              <h6 className="uppercase font-bold mb-6" style={{ color: '#FF9148' }}>Company</h6>
+              <ul className="space-y-3 text-gray-300">
+                <li><Link to="/about" className="hover:text-white transition">About Us</Link></li>
+                <li><Link to="/contact" className="hover:text-white transition">Contact Us</Link></li>
+                <li><Link to="/apply" className="hover:text-white transition">Apply Now</Link></li>
+                <li><a href="#" className="hover:text-white transition">Privacy Policy</a></li>
+                <li><a href="#" className="hover:text-white transition">Terms & Condition</a></li>
               </ul>
             </div>
 
-            {/* Services Links */}
             <div>
-              <h6 className="text-blue-400 uppercase font-bold mb-6">Services</h6>
-              <ul className="space-y-3">
-                <li><a href="#" className="hover:text-blue-400">Personalized Guidance</a></li>
-                <li><a href="#" className="hover:text-blue-400">Networking Opportunities</a></li>
-                <li><a href="#" className="hover:text-blue-400">Industry Insights</a></li>
-                <li><a href="#" className="hover:text-blue-400">Career Advancement</a></li>
-                <li><a href="#" className="hover:text-blue-400">Personal Growth</a></li>
+              <h6 className="uppercase font-bold mb-6" style={{ color: '#FF9148' }}>Services</h6>
+              <ul className="space-y-3 text-gray-300">
+                <li><a href="#" className="hover:text-white transition">Personalized Guidance</a></li>
+                <li><a href="#" className="hover:text-white transition">Networking Opportunities</a></li>
+                <li><a href="#" className="hover:text-white transition">Industry Insights</a></li>
+                <li><a href="#" className="hover:text-white transition">Career Advancement</a></li>
+                <li><a href="#" className="hover:text-white transition">Personal Growth</a></li>
               </ul>
             </div>
           </div>

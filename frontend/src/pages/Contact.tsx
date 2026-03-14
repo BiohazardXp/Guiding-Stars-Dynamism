@@ -1,40 +1,21 @@
-
 import { Link } from 'react-router-dom';
+import Navbar from '../components/Navbar';
 
 const Contact = () => {
+  const inputFocus = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    e.target.style.borderColor = '#FF9148';
+    e.target.style.boxShadow = '0 0 0 3px rgba(255, 145, 72, 0.15)';
+  };
+  const inputBlur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    e.target.style.borderColor = '#d1d5db';
+    e.target.style.boxShadow = 'none';
+  };
+
+  const inputClass = "w-full p-4 border border-gray-300 rounded-lg outline-none transition text-gray-800 placeholder-gray-400";
+
   return (
     <div className="bg-white min-h-screen">
-      {/* Header / Navbar - consistent with Home & About */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-gray-900 text-white shadow-lg">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <Link to="/" className="flex items-center">
-            <img src="/img/HORIZONTAL.png" alt="Guiding Stars" className="h-12" />
-          </Link>
-
-          <nav className="hidden lg:flex space-x-8 items-center">
-            <Link to="/" className="font-semibold hover:text-theme transition">Home</Link>
-            <Link to="/about" className="font-semibold hover:text-theme transition">About</Link>
-            <Link to="/team" className="font-semibold hover:text-theme transition">Team</Link>
-            <Link to="/contact" className="font-semibold text-theme">Contact Us</Link>
-
-            <div className="relative group">
-              <button className="font-semibold hover:text-theme transition flex items-center">
-                Events <span className="ml-1">▼</span>
-              </button>
-              <div className="absolute hidden group-hover:block bg-white text-gray-800 shadow-lg rounded mt-2 w-48">
-                <Link to="/graduation1" className="block px-4 py-2 hover:bg-gray-100">First Cohort Graduation</Link>
-              </div>
-            </div>
-
-            <a
-              href="#contact"
-              className="bg-theme text-white px-6 py-3 rounded font-semibold hover:bg-opacity-90 transition"
-            >
-              ENQUIRE NOW <i className="fa fa-arrow-right ml-2"></i>
-            </a>
-          </nav>
-        </div>
-      </header>
+      <Navbar />
 
       {/* Hero Section */}
       <section className="relative mt-20">
@@ -54,6 +35,7 @@ const Contact = () => {
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-6">
           <div className="grid md:grid-cols-2 gap-12 items-start">
+
             {/* Left: Contact Info */}
             <div className="space-y-8">
               <p className="text-lg text-gray-700 leading-relaxed">
@@ -61,29 +43,33 @@ const Contact = () => {
               </p>
 
               <div className="grid sm:grid-cols-2 gap-8">
-                <div>
-                  <div className="flex items-start">
-                    <i className="fa fa-phone-alt text-theme text-3xl mr-4 mt-1"></i>
-                    <div>
-                      <h4 className="text-xl font-bold mb-1">Phone Number</h4>
-                      <p className="text-gray-700">
-                        <a href="tel:+260973223910" className="hover:text-theme">+260 973 223 910</a>
-                      </p>
-                    </div>
+                <div className="flex items-start">
+                  <i className="fa fa-phone-alt text-3xl mr-4 mt-1" style={{ color: '#FF9148' }}></i>
+                  <div>
+                    <h4 className="text-xl font-bold mb-1 text-gray-800">Phone Number</h4>
+                    <a
+                      href="tel:+260973223910"
+                      className="text-gray-600 transition"
+                      onMouseEnter={(e) => (e.currentTarget.style.color = '#FF9148')}
+                      onMouseLeave={(e) => (e.currentTarget.style.color = '')}
+                    >
+                      +260 973 223 910
+                    </a>
                   </div>
                 </div>
 
-                <div>
-                  <div className="flex items-start">
-                    <i className="fa fa-envelope text-theme text-3xl mr-4 mt-1"></i>
-                    <div>
-                      <h4 className="text-xl font-bold mb-1">Email</h4>
-                      <p className="text-gray-700">
-                        <a href="mailto:guidingstars2024@gmail.com" className="hover:text-theme">
-                          guidingstars2024@gmail.com
-                        </a>
-                      </p>
-                    </div>
+                <div className="flex items-start">
+                  <i className="fa fa-envelope text-3xl mr-4 mt-1" style={{ color: '#FF9148' }}></i>
+                  <div>
+                    <h4 className="text-xl font-bold mb-1 text-gray-800">Email</h4>
+                    <a
+                      href="mailto:guidingstars2024@gmail.com"
+                      className="text-gray-600 transition"
+                      onMouseEnter={(e) => (e.currentTarget.style.color = '#FF9148')}
+                      onMouseLeave={(e) => (e.currentTarget.style.color = '')}
+                    >
+                      guidingstars2024@gmail.com
+                    </a>
                   </div>
                 </div>
               </div>
@@ -99,7 +85,9 @@ const Contact = () => {
                       type="text"
                       placeholder="Your Name*"
                       required
-                      className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-theme"
+                      className={inputClass}
+                      onFocus={inputFocus}
+                      onBlur={inputBlur}
                     />
                   </div>
 
@@ -109,7 +97,9 @@ const Contact = () => {
                       type="tel"
                       placeholder="Phone Number*"
                       required
-                      className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-theme"
+                      className={inputClass}
+                      onFocus={inputFocus}
+                      onBlur={inputBlur}
                     />
                   </div>
 
@@ -119,7 +109,9 @@ const Contact = () => {
                       type="email"
                       placeholder="Your Email Address*"
                       required
-                      className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-theme"
+                      className={inputClass}
+                      onFocus={inputFocus}
+                      onBlur={inputBlur}
                     />
                   </div>
 
@@ -129,7 +121,9 @@ const Contact = () => {
                       type="text"
                       placeholder="Subject*"
                       required
-                      className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-theme"
+                      className={inputClass}
+                      onFocus={inputFocus}
+                      onBlur={inputBlur}
                     />
                   </div>
 
@@ -139,14 +133,17 @@ const Contact = () => {
                       rows={6}
                       placeholder="Message*"
                       required
-                      className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-theme"
+                      className={`${inputClass} resize-none`}
+                      onFocus={inputFocus}
+                      onBlur={inputBlur}
                     ></textarea>
                   </div>
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full bg-theme text-white py-4 rounded-lg font-semibold hover:bg-opacity-90 transition"
+                  className="w-full text-white py-4 rounded-lg font-semibold transition"
+                  style={{ background: 'linear-gradient(135deg, #FF9148, #E8722E)' }}
                 >
                   SEND MESSAGE
                 </button>
@@ -156,40 +153,46 @@ const Contact = () => {
         </div>
       </section>
 
-      {/* Footer - same as Home */}
-      <footer className="bg-dark text-white py-16">
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white py-16">
         <div className="container mx-auto px-6">
           <div className="grid md:grid-cols-4 gap-12">
             <div>
               <img src="/img/HORIZONTAL (2).png" alt="Guiding Stars" className="h-16 mb-6" />
               <p className="text-gray-300">Nurture Brilliance, Ignite Success.</p>
+              <div className="mt-6">
+                <Link to="/login" className="text-sm text-gray-400 hover:text-white transition">
+                  Staff Login
+                </Link>
+              </div>
             </div>
 
             <div>
-              <h6 className="text-theme uppercase font-bold mb-6">Contact</h6>
-              <p className="mb-4"><i className="fa fa-map-marker-alt mr-3"></i>Plot 25866 Kabangwe, off Great North Road, Lusaka.</p>
-              <p className="mb-4"><i className="fa fa-phone-alt mr-3"></i>+260 973 223 910</p>
-              <p><i className="fa fa-envelope mr-3"></i>info@guidingstars.com</p>
+              <h6 className="uppercase font-bold mb-6" style={{ color: '#FF9148' }}>Contact</h6>
+              <p className="mb-4 text-gray-300"><i className="fa fa-map-marker-alt mr-3"></i>Plot 25866 Kabangwe, off Great North Road, Lusaka.</p>
+              <p className="mb-4 text-gray-300"><i className="fa fa-phone-alt mr-3"></i>+260 973 223 910</p>
+              <p className="text-gray-300"><i className="fa fa-envelope mr-3"></i>info@guidingstars.com</p>
             </div>
 
             <div>
-              <h6 className="text-theme uppercase font-bold mb-6">Company</h6>
-              <ul className="space-y-3">
-                <li><Link to="/about" className="hover:text-theme">About Us</Link></li>
-                <li><Link to="/contact" className="hover:text-theme">Contact Us</Link></li>
-                <li><a href="#" className="hover:text-theme">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-theme">Terms & Condition</a></li>
+              <h6 className="uppercase font-bold mb-6" style={{ color: '#FF9148' }}>Company</h6>
+              <ul className="space-y-3 text-gray-300">
+                <li><Link to="/about" className="hover:text-white transition">About Us</Link></li>
+                <li><Link to="/contact" className="hover:text-white transition">Contact Us</Link></li>
+                <li><Link to="/apply" className="hover:text-white transition">Apply Now</Link></li>
+                <li><a href="#" className="hover:text-white transition">Privacy Policy</a></li>
+                <li><a href="#" className="hover:text-white transition">Terms & Condition</a></li>
               </ul>
             </div>
 
             <div>
-              <h6 className="text-theme uppercase font-bold mb-6">Services</h6>
-              <ul className="space-y-3">
-                <li><a href="#" className="hover:text-theme">Personalized Guidance</a></li>
-                <li><a href="#" className="hover:text-theme">Networking Opportunities</a></li>
-                <li><a href="#" className="hover:text-theme">Industry Insights</a></li>
-                <li><a href="#" className="hover:text-theme">Career Advancement</a></li>
-                <li><a href="#" className="hover:text-theme">Personal Growth</a></li>
+              <h6 className="uppercase font-bold mb-6" style={{ color: '#FF9148' }}>Services</h6>
+              <ul className="space-y-3 text-gray-300">
+                <li><a href="#" className="hover:text-white transition">Personalized Guidance</a></li>
+                <li><a href="#" className="hover:text-white transition">Networking Opportunities</a></li>
+                <li><a href="#" className="hover:text-white transition">Industry Insights</a></li>
+                <li><a href="#" className="hover:text-white transition">Career Advancement</a></li>
+                <li><a href="#" className="hover:text-white transition">Personal Growth</a></li>
               </ul>
             </div>
           </div>

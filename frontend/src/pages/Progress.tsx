@@ -153,7 +153,7 @@ function Progress() {
   const getStatusBadgeClass = (status: string) => {
     switch (status) {
       case 'on_track':
-        return 'bg-green-100 text-green-800';
+        return 'bg-primary-100 text-primary-800';
       case 'needs_attention':
         return 'bg-yellow-100 text-yellow-800';
       case 'milestone_completed':
@@ -201,9 +201,9 @@ function Progress() {
       )}
 
       {success && (
-        <div className="mb-6 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg flex items-center justify-between">
+        <div className="mb-6 bg-primary-50 border border-primary-100 text-primary-700 px-4 py-3 rounded-lg flex items-center justify-between">
           <span>{success}</span>
-          <button onClick={() => setSuccess('')} className="text-green-700 hover:text-green-900">×</button>
+          <button onClick={() => setSuccess('')} className="text-primary-700 hover:text-primary-900">×</button>
         </div>
       )}
 
@@ -227,10 +227,10 @@ function Progress() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">On Track</p>
-              <p className="text-2xl font-bold text-green-600">{stats.onTrack}</p>
+              <p className="text-2xl font-bold text-primary-600">{stats.onTrack}</p>
             </div>
-            <div className="bg-green-100 p-3 rounded-full">
-              <svg className="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="bg-primary-100 p-3 rounded-full">
+              <svg className="w-6 h-6 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
