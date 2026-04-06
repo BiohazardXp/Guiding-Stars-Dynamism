@@ -5,13 +5,15 @@ const Mentor = require('./Mentor');
 const Mentee = require('./Mentee');
 const Match = require('./Match');
 const ProgressEntry = require('./ProgressEntry');
+const Content = require('./Content');
 
 const models = {
   User,
   Mentor,
   Mentee,
   Match,
-  ProgressEntry
+  ProgressEntry,
+  Content
 };
 
 // This loop is the magic part—it "plugs in" the associations

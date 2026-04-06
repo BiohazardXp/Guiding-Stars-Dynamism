@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
 const ApplyPage = () => {
   const [formData, setFormData] = useState({
@@ -107,8 +108,17 @@ const ApplyPage = () => {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-gray-50 py-12 px-4 mt-20">
-        <div className="max-w-2xl mx-auto bg-white shadow-2xl rounded-2xl overflow-hidden">
+      <div
+        className="min-h-screen py-12 px-4"
+        style={{
+          backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(/img/corporate\ image\ 3.jpeg)',
+          backgroundAttachment: 'fixed',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center'
+        }}
+      >
+        
+        <div className="max-w-2xl mx-auto bg-white shadow-2xl rounded-2xl overflow-hidden relative z-10">
 
           {/* Form Header */}
           <div
@@ -285,6 +295,8 @@ const ApplyPage = () => {
           </form>
         </div>
       </div>
+
+      <Footer />
     </>
   );
 };

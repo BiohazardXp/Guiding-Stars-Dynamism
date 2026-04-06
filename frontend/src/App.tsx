@@ -20,10 +20,12 @@ import MenteeLogin from './pages/MenteeLogin';
 import Mentees from './pages/Mentees';
 import Mentors from './pages/Mentors';
 import Progress from './pages/Progress';
+import ContentManagement from './pages/ContentManagement';
 import ResendVerification from './pages/ResendVerification';
 import Team from './pages/Team';
 import VerifyEmail from './pages/VerifyEmail';
 import ForgotPassword from './pages/ForgotPassword';
+import Testimonials from './pages/Testimonials';
 
 // --- HELPER COMPONENTS ---
 
@@ -86,7 +88,7 @@ function AdminLayout({ children }: { children: JSX.Element }) {
   return (
     <div className="flex min-h-screen bg-gray-100">
       <Sidebar />
-      <main className="flex-1 lg:ml-64 p-4 sm:p-6 lg:p-8 transition-all duration-300">
+      <main className="flex-1 lg:ml-64 transition-all duration-300">
         <div className="mt-16 lg:mt-0">
           {children}
         </div>
@@ -143,12 +145,14 @@ function App() {
   <Route path="/contact" element={<PublicLayout><Contact /></PublicLayout>} />
   <Route path="/graduation" element={<PublicLayout><Graduation /></PublicLayout>} />
   <Route path="/team" element={<PublicLayout><Team /></PublicLayout>} />
+  <Route path="/testimonials" element={<PublicLayout><Testimonials /></PublicLayout>} />
   <Route path="/verify-email" element={<PublicLayout><VerifyEmail /></PublicLayout>} />
   <Route path="/resend-verification" element={<PublicLayout><ResendVerification /></PublicLayout>} />
   <Route path="/forgot-password" element={<PublicLayout><ForgotPassword /></PublicLayout>} />
 
         {/* Guest routes */}
         <Route path="/login" element={<GuestRoute><Login /></GuestRoute>} />
+        <Route path="/admin-login" element={<GuestRoute><Login /></GuestRoute>} />
         <Route path="/mentee/login" element={<GuestRoute><MenteeLogin /></GuestRoute>} />
 
         {/* Admin Routes - WITH Sidebar */}
@@ -175,6 +179,11 @@ function App() {
         <Route path="/progress" element={
           <ProtectedRoute requiredRole="admin">
             <AdminLayout><Progress /></AdminLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/content" element={
+          <ProtectedRoute requiredRole="admin">
+            <AdminLayout><ContentManagement /></AdminLayout>
           </ProtectedRoute>
         } />
 

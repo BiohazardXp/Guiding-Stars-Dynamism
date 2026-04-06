@@ -1,9 +1,7 @@
 // backend/routes/progress.js
 const express = require('express');
 const { authMiddleware, adminOnly } = require('../middleware/auth');
-const ProgressEntry = require('../models/ProgressEntry');
-const Mentee = require('../models/Mentee');
-const Mentor = require('../models/Mentor');
+const { ProgressEntry, Mentee, Mentor, User } = require('../models/index');
 
 const router = express.Router();
 
@@ -12,12 +10,13 @@ router.get('/', authMiddleware, adminOnly, async (req, res) => {
   try {
     const entries = await ProgressEntry.findAll({
       include: [
-        { model: Mentee, attributes: ['first_name', 'last_name', 'email'] },
-        { model: Mentor, include: [{ model: require('../models/User'), attributes: ['first_name', 'last_name'] }] },
+        { model: Mentee, as: 'Mentee', attributes: ['first_name', 'last_name', 'email'] },
+        { model: Mentor, as: 'Mentor', include: [{ model: User, as: 'User', attributes: ['first_name', 'last_name'] }] },
       ],
     });
     res.json({ success: true, data: entries });
   } catch (err) {
+    console.error('Progress GET error:', err);
     res.status(500).json({ success: false, message: err.message });
   }
 });
@@ -41,7 +40,7 @@ router.get('/mentee/:menteeId', authMiddleware, async (req, res) => {
     const entries = await ProgressEntry.findAll({
       where: { mentee_id: req.params.menteeId },
       include: [
-        { model: Mentor, include: [{ model: require('../models/User'), attributes: ['first_name', 'last_name'] }] },
+        { model: Mentor, as: 'Mentor', include: [{ model: User, as: 'User', attributes: ['first_name', 'last_name'] }] },
       ],
       order: [['entry_date', 'DESC']],
     });

@@ -19,4 +19,19 @@ const ProgressEntry = sequelize.define('ProgressEntry', {
   underscored: true,
 });
 
+// ✅ STANDARDIZED ASSOCIATION LOGIC
+ProgressEntry.associate = (models) => {
+  // ProgressEntry belongs to a Mentee
+  ProgressEntry.belongsTo(models.Mentee, {
+    foreignKey: 'mentee_id',
+    as: 'Mentee'
+  });
+
+  // ProgressEntry belongs to a Mentor
+  ProgressEntry.belongsTo(models.Mentor, {
+    foreignKey: 'mentor_id',
+    as: 'Mentor'
+  });
+};
+
 module.exports = ProgressEntry;

@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
 const faqs = [
   {
@@ -15,6 +15,21 @@ const faqs = [
   },
 ];
 
+const values = [
+  { title: 'Authenticity', icon: '✦' },
+  { title: 'Innovation', icon: '✦' },
+  { title: 'Transparency', icon: '✦' },
+  { title: 'Sustainability', icon: '✦' },
+];
+
+const pillars = [
+  { title: 'Integrity', desc: 'Doing what is right, even when no one is watching.' },
+  { title: 'Attitude', desc: 'Approaching every challenge with a growth mindset.' },
+  { title: 'Loyalty', desc: 'Committed to the success of every individual we serve.' },
+  { title: 'Behaviour', desc: 'Modelling the professional conduct expected of leaders.' },
+  { title: 'Diplomacy', desc: 'Navigating relationships with grace and emotional intelligence.' },
+];
+
 const About = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
@@ -27,7 +42,7 @@ const About = () => {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative mt-20">
+      <section className="relative">
         <img
           src="/img/Top-Bunner-1.jpg"
           alt="About Banner"
@@ -56,30 +71,27 @@ const About = () => {
           </div>
 
           <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="space-y-6 text-lg text-gray-700 leading-relaxed">
+            <div className="space-y-5 text-lg text-gray-700 leading-relaxed">
               <p>
-                Guiding Stars Mentorship Academy is a rising startup, established in 2024 with a
-                mission to bridge the gap between marketing academia and practice. We create an
-                inclusive and diverse community where aspiring marketing students, graduates, and
-                professionals can build knowledge, gain confidence and develop the skills necessary
-                to lead in the global marketing industry.
+                Guiding Stars is a non-profit organization founded in 2024 in Zambia, dedicated to
+                advancing excellence in corporate and business education. It serves as a catalyst
+                for nurturing the next generation of leaders by bridging the gap between academic
+                learning and practical experience.
               </p>
               <p>
-                Our focus on continuous learning and talent development forms the core of our
-                comprehensive mentorship program. As we grow, we remain committed to delivering
-                impactful marketing solutions and nurturing lasting relationships with our clients
-                and partners.
+                The organization equips students, graduates, and emerging professionals with the
+                competence, confidence, and character required to excel in today's global business
+                landscape.
               </p>
               <p>
-                Our goal is to empower our team to reach their full potential and contribute to a
-                brighter, more sustainable future in the marketing world, embodying the spirit of
-                starlight guidance.
+                Through structured mentorship, leadership training, and community engagement
+                initiatives, it empowers young people to lead with purpose and distinction.
               </p>
             </div>
 
             <div className="grid grid-cols-2 gap-6">
               <img
-                src="img/about-1.png"
+                src="img/IMG_0778.JPG"
                 alt="About Image 1"
                 className="rounded-lg shadow-lg"
               />
@@ -110,6 +122,85 @@ const About = () => {
         </div>
       </section>
 
+      {/* Human Leadership Pillars */}
+      <section className="py-16 bg-white">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-12">
+            <h6 className="uppercase text-lg font-semibold" style={{ color: '#FF9148' }}>
+              What Sets Us Apart
+            </h6>
+            <h2 className="text-4xl font-bold mt-2">
+              THE HUMAN SIDE OF{' '}
+              <span className="uppercase" style={{ color: '#FF9148' }}>
+                LEADERSHIP
+              </span>
+            </h2>
+            <p className="mt-4 text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              Beyond technical and academic proficiency, Guiding Stars places strong emphasis on
+              the human aspects of leadership. We believe great leaders are defined not just by
+              what they know, but by who they are.
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-6">
+            {pillars.map((pillar, idx) => (
+              <div
+                key={idx}
+                className="text-center p-6 rounded-xl border border-gray-100 shadow-md hover:shadow-lg transition"
+              >
+                <div
+                  className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-lg"
+                  style={{ background: 'linear-gradient(135deg, #FF9148, #E8722E)' }}
+                >
+                  {idx + 1}
+                </div>
+                <h4 className="font-bold text-gray-800 mb-2">{pillar.title}</h4>
+                <p className="text-sm text-gray-500 leading-relaxed">{pillar.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Guiding Principles */}
+      <section className="py-16 bg-gray-50">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-12">
+            <h6 className="uppercase text-lg font-semibold" style={{ color: '#FF9148' }}>
+              Our Principles
+            </h6>
+            <h2 className="text-4xl font-bold mt-2">
+              WHAT{' '}
+              <span className="uppercase" style={{ color: '#FF9148' }}>
+                GUIDES US
+              </span>
+            </h2>
+            <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
+              Guided by these core principles, Guiding Stars continues to illuminate pathways to
+              success, shaping individuals who lead with wisdom, confidence, and impact.
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-4xl mx-auto">
+            {values.map((value, idx) => (
+              <div
+                key={idx}
+                className="rounded-xl p-6 text-center text-white shadow-lg"
+                style={{
+                  background:
+                    idx % 2 === 0
+                      ? 'linear-gradient(135deg, #FF9148, #E8722E)'
+                      : '#1f2937',
+                }}
+              >
+                <div className="text-2xl mb-3 opacity-80">{value.icon}</div>
+                <h4 className="font-bold text-lg">{value.title}</h4>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* FAQ Accordion */}
       <section className="py-16 bg-white">
         <div className="container mx-auto px-6">
@@ -124,19 +215,21 @@ const About = () => {
 
           <div className="max-w-4xl mx-auto space-y-4">
             {faqs.map((faq, index) => (
-              <div key={index} className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-100">
+              <div
+                key={index}
+                className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-100"
+              >
                 <button
                   onClick={() => toggle(index)}
                   className="w-full p-6 text-left flex justify-between items-center gap-4"
                 >
-                  <span className="text-lg font-semibold text-gray-800">
-                    {faq.question}
-                  </span>
+                  <span className="text-lg font-semibold text-gray-800">{faq.question}</span>
                   <span
                     className="text-2xl font-light flex-shrink-0 transition-transform duration-200"
                     style={{
                       color: '#FF9148',
                       transform: openIndex === index ? 'rotate(45deg)' : 'rotate(0deg)',
+                      display: 'inline-block',
                     }}
                   >
                     +
@@ -154,108 +247,8 @@ const About = () => {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-16">
-        <div className="container mx-auto px-6">
-          <div className="grid md:grid-cols-4 gap-12">
-            <div>
-              <img src="/img/HORIZONTAL (2).png" alt="Guiding Stars" className="h-16 mb-6" />
-              <p className="text-gray-300">Nurture Brilliance, Ignite Success.</p>
-              <div className="mt-6">
-                <Link to="/login" className="text-sm text-gray-400 hover:text-white transition">
-                  Staff Login
-                </Link>
-              </div>
-            </div>
-
-            <div>
-              <h6 className="uppercase font-bold mb-6" style={{ color: '#FF9148' }}>
-                Contact
-              </h6>
-              <p className="mb-4 text-gray-300">
-                <i className="fa fa-map-marker-alt mr-3"></i>Plot 25866 Kabangwe, off Great North
-                Road, Lusaka.
-              </p>
-              <p className="mb-4 text-gray-300">
-                <i className="fa fa-phone-alt mr-3"></i>+260 973 223 910
-              </p>
-              <p className="text-gray-300">
-                <i className="fa fa-envelope mr-3"></i>info@guidingstars.com
-              </p>
-            </div>
-
-            <div>
-              <h6 className="uppercase font-bold mb-6" style={{ color: '#FF9148' }}>
-                Company
-              </h6>
-              <ul className="space-y-3 text-gray-300">
-                <li>
-                  <Link to="/about" className="hover:text-white transition">
-                    About Us
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/contact" className="hover:text-white transition">
-                    Contact Us
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/apply" className="hover:text-white transition">
-                    Apply Now
-                  </Link>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition">
-                    Privacy Policy
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition">
-                    Terms & Condition
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h6 className="uppercase font-bold mb-6" style={{ color: '#FF9148' }}>
-                Services
-              </h6>
-              <ul className="space-y-3 text-gray-300">
-                <li>
-                  <a href="#" className="hover:text-white transition">
-                    Personalized Guidance
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition">
-                    Networking Opportunities
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition">
-                    Industry Insights
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition">
-                    Career Advancement
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition">
-                    Personal Growth
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="border-t border-gray-700 mt-12 pt-8 text-center text-gray-400">
-            © {new Date().getFullYear()} Guiding Stars. All Rights Reserved.
-          </div>
-        </div>
-      </footer>
+      {/* Old Footer - Replaced by <Footer /> component */}
+      <Footer />
     </div>
   );
 };

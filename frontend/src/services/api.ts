@@ -9,18 +9,25 @@ const api = axios.create({
 api.interceptors.request.use((config) => {
   // try common storage keys used in this project
   const token =
+    localStorage.getItem('admin_token') ||
     localStorage.getItem('token') ||
     localStorage.getItem('authToken') ||
     localStorage.getItem('ACCESS_TOKEN') ||
     sessionStorage.getItem('token');
 
+  console.log('[api] Checking tokens:', {
+    admin_token: localStorage.getItem('admin_token'),
+    token: localStorage.getItem('token'),
+    authToken: localStorage.getItem('authToken'),
+    found_token: token ? 'YES' : 'NO'
+  });
+
   if (token) {
     if (!config.headers) config.headers = {} as any;
     config.headers.Authorization = `Bearer ${token}`;
+    console.log('[api] Adding Authorization header:', config.headers.Authorization);
   } else {
-    // helpful debug log when token missing
-    // remove or lower verbosity in production
-    console.debug('[api] no auth token found for request', config.url);
+    console.warn('[api] no auth token found for request', config.url);
   }
 
   return config;

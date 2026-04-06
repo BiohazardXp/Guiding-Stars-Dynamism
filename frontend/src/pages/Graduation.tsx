@@ -1,9 +1,9 @@
-// src/pages/Graduation.tsx
+//import Navbar from '../components/Navbar';
 //import React from "react";
-import { Link } from "react-router-dom";
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
 // No imports needed for public/ images — just use string paths starting with "/"
-const horizontalLogo = "/img/HORIZONTAL.png";
 const topBanner = "/img/Top-Bunner-1.jpg";
 const corporateImage3 = "/img/corporate image 3.jpeg";
 const graduationCohort = "/img/graduation cohort.jpeg";
@@ -15,58 +15,7 @@ const manuelMwanza = "/img/Manuel Mwanza.jpg";
 const Graduation = () => {
   return (
     <div className="bg-white min-h-screen">
-      {/* Header / Navbar */}
-      <header className="bg-navy text-white">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-wrap items-center justify-between py-4">
-            {/* Logo */}
-            <Link to="/" className="flex items-center">
-              <img src={horizontalLogo} alt="Guiding Stars" className="h-12" />
-            </Link>
-
-            {/* Mobile toggle */}
-            <button
-              className="lg:hidden text-white focus:outline-none"
-              aria-label="Toggle navigation"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
-
-            {/* Nav Links */}
-            <nav className="hidden lg:flex lg:items-center lg:space-x-8">
-              <Link to="/" className="hover:text-indigo-300 font-semibold">Home</Link>
-              <Link to="/about" className="hover:text-indigo-300 font-semibold">About</Link>
-              <Link to="/team" className="hover:text-indigo-300 font-semibold">Team</Link>
-              <Link to="/contact" className="hover:text-indigo-300 font-semibold">Contact Us</Link>
-
-              {/* Events Dropdown */}
-              <div className="relative group">
-                <button className="hover:text-indigo-300 font-semibold flex items-center">
-                  Events
-                  <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-                <div className="absolute hidden group-hover:block bg-white text-gray-800 shadow-lg rounded mt-2">
-                  <Link to="/graduation" className="block px-4 py-2 hover:bg-gray-100">
-                    First Cohort Graduation
-                  </Link>
-                </div>
-              </div>
-            </nav>
-
-            {/* Enquire Button */}
-            <a
-              href="#contact"
-              className="hidden lg:inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded transition"
-            >
-              ENQUIRE NOW <i className="fas fa-arrow-right ml-2"></i>
-            </a>
-          </div>
-        </div>
-      </header>
+      <Navbar />
 
       {/* Hero / Banner */}
       <section className="relative">
@@ -188,63 +137,7 @@ const Graduation = () => {
         </div>
       </div>
 
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            {/* Logo & Description */}
-            <div>
-              <img src={horizontalLogo} alt="Guiding Stars" className="h-16 mb-4" />
-              <p className="text-gray-400">
-                Nurture Brilliance, Ignite Success.
-              </p>
-            </div>
-
-            {/* Contact */}
-            <div>
-              <h6 className="text-lg font-semibold mb-4">Contact</h6>
-              <p className="mb-2">
-                <i className="fas fa-map-marker-alt mr-2"></i>
-                Plot 25866 Kabangwe, off Great North Road, Lusaka.
-              </p>
-              <p className="mb-2">
-                <i className="fas fa-phone-alt mr-2"></i>
-                +260 973 223 910
-              </p>
-              <p>
-                <i className="fas fa-envelope mr-2"></i>
-                info@guidingstars.com
-              </p>
-            </div>
-
-            {/* Company Links */}
-            <div>
-              <h6 className="text-lg font-semibold mb-4">Company</h6>
-              <ul className="space-y-2">
-                <li><Link to="/about" className="hover:text-indigo-400">About Us</Link></li>
-                <li><Link to="/contact" className="hover:text-indigo-400">Contact Us</Link></li>
-                <li><a href="#" className="hover:text-indigo-400">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-indigo-400">Terms & Condition</a></li>
-              </ul>
-            </div>
-
-            {/* Services */}
-            <div>
-              <h6 className="text-lg font-semibold mb-4">Services</h6>
-              <ul className="space-y-2">
-                <li><a href="#" className="hover:text-indigo-400">Personalized Guidance</a></li>
-                <li><a href="#" className="hover:text-indigo-400">Networking Opportunities</a></li>
-                <li><a href="#" className="hover:text-indigo-400">Industry Insights</a></li>
-                <li><a href="#" className="hover:text-indigo-400">Career Advancement</a></li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-500">
-            © {new Date().getFullYear()} Guiding Stars. All Rights Reserved.
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };

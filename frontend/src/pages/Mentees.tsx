@@ -169,61 +169,70 @@ const Mentees = () => {
 
   return (
     // overflow-x-hidden on the root prevents ANY child from causing page-wide scroll
-    <div className="flex min-h-screen bg-gray-50 overflow-x-hidden">
+    <div
+      className="min-h-screen overflow-x-hidden"
+      style={{
+        backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url("/img/corporate image 3.jpeg")',
+        backgroundAttachment: 'fixed',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center'
+      }}
+    >
       <Sidebar />
 
       {/*
         On mobile: full width (sidebar is fixed/overlaid, not in flow)
-        On desktop (lg+): offset by sidebar width w-64
+        On desktop (lg+): small offset from sidebar for spacing
         overflow-x-hidden here too so nothing inside leaks out
       */}
-      <div className="w-full lg:pl-64 overflow-x-hidden">
-        <main className="p-4 md:p-6 overflow-x-hidden">
+      <div className="lg:ml-4 w-full overflow-x-hidden">
+        <main className="p-4 md:p-6 overflow-x-hidden w-full flex justify-center">
+          <div className="w-full max-w-7xl">
 
-          {/* Header */}
-          <div className="mb-6 md:mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-800">
-              Mentees & Applications
-            </h2>
-            <p className="text-gray-500 mt-2">
-              Manage mentee applications and assignments
-            </p>
-          </div>
-
-          {/* Alerts */}
-          {error && (
-            <div className="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center justify-between">
-              <span className="text-sm">{error}</span>
-              <button
-                onClick={() => setError('')}
-                className="text-red-700 hover:text-red-900 text-xl ml-4 flex-shrink-0"
-              >
-                ×
-              </button>
+            {/* Header */}
+            <div className="mb-6 md:mb-8">
+              <h2 className="text-2xl md:text-3xl font-bold text-white">
+                Mentees & Applications
+              </h2>
+              <p className="text-gray-300 mt-2">
+                Manage mentee applications and assignments
+              </p>
             </div>
-          )}
-          {success && (
-            <div
-              className="mb-6 border px-4 py-3 rounded-lg flex items-center justify-between"
-              style={{
-                background: 'rgba(255,145,72,0.1)',
-                borderColor: 'rgba(255,145,72,0.3)',
-                color: '#E8722E',
-              }}
-            >
-              <span className="text-sm">{success}</span>
-              <button
-                onClick={() => setSuccess('')}
-                className="text-xl ml-4 flex-shrink-0"
-                style={{ color: '#E8722E' }}
-              >
-                ×
-              </button>
-            </div>
-          )}
 
-          {/* Stats Cards */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6 md:mb-8">
+            {/* Alerts */}
+            {error && (
+              <div className="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center justify-between">
+                <span className="text-sm">{error}</span>
+                <button
+                  onClick={() => setError('')}
+                  className="text-red-700 hover:text-red-900 text-xl ml-4 flex-shrink-0"
+                >
+                  ×
+                </button>
+              </div>
+            )}
+            {success && (
+              <div
+                className="mb-6 border px-4 py-3 rounded-lg flex items-center justify-between"
+                style={{
+                  background: 'rgba(255,145,72,0.1)',
+                  borderColor: 'rgba(255,145,72,0.3)',
+                  color: '#E8722E',
+                }}
+              >
+                <span className="text-sm">{success}</span>
+                <button
+                  onClick={() => setSuccess('')}
+                  className="text-xl ml-4 flex-shrink-0"
+                  style={{ color: '#E8722E' }}
+                >
+                  ×
+                </button>
+              </div>
+            )}
+
+            {/* Stats Cards */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6 md:mb-8">
             {[
               { label: 'Total', value: mentees.length, color: '#1f2937' },
               {
@@ -249,66 +258,66 @@ const Mentees = () => {
                 </p>
               </div>
             ))}
-          </div>
-
-          {/* Filter Tabs */}
-          <div className="bg-white rounded-lg shadow-md mb-6">
-            <div className="flex flex-wrap border-b border-gray-200">
-              {STATUS_FILTERS.map(filter => (
-                <button
-                  key={filter}
-                  onClick={() => handleFilterChange(filter)}
-                  className="px-4 py-3 text-sm font-medium capitalize transition-colors whitespace-nowrap"
-                  style={
-                    activeFilter === filter
-                      ? { borderBottom: '2px solid #FF9148', color: '#FF9148' }
-                      : { color: '#6b7280' }
-                  }
-                >
-                  {filter === 'all'
-                    ? `All (${mentees.length})`
-                    : `${filter} (${
-                        mentees.filter(m => m.application_status === filter).length
-                      })`}
-                </button>
-              ))}
             </div>
-          </div>
 
-          {/* Mentees List */}
-          {filteredMentees.length === 0 ? (
-            <div className="bg-white rounded-lg shadow-md p-8 text-center">
-              <svg
-                className="mx-auto h-12 w-12 text-gray-300 mb-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                />
-              </svg>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
-                No {activeFilter === 'all' ? '' : activeFilter} mentees found
-              </h3>
-              {activeFilter !== 'all' && (
-                <button
-                  className="underline"
-                  style={{ color: '#FF9148' }}
-                  onClick={() => handleFilterChange('all')}
-                >
-                  View all mentees
-                </button>
-              )}
+            {/* Filter Tabs */}
+            <div className="bg-white rounded-lg shadow-md mb-6">
+              <div className="flex flex-wrap border-b border-gray-200">
+                {STATUS_FILTERS.map(filter => (
+                  <button
+                    key={filter}
+                    onClick={() => handleFilterChange(filter)}
+                    className="px-4 py-3 text-sm font-medium capitalize transition-colors whitespace-nowrap"
+                    style={
+                      activeFilter === filter
+                        ? { borderBottom: '2px solid #FF9148', color: '#FF9148' }
+                        : { color: '#6b7280' }
+                    }
+                  >
+                    {filter === 'all'
+                      ? `All (${mentees.length})`
+                      : `${filter} (${
+                          mentees.filter(m => m.application_status === filter).length
+                        })`}
+                  </button>
+                ))}
+              </div>
             </div>
-          ) : (
-            <>
-              {/* Desktop Table */}
-              <div className="hidden md:block bg-white rounded-xl shadow-md overflow-hidden">
-                <div className="overflow-x-auto">
+
+            {/* Mentees List */}
+            {filteredMentees.length === 0 ? (
+              <div className="bg-white rounded-lg shadow-md p-8 text-center">
+                <svg
+                  className="mx-auto h-12 w-12 text-gray-300 mb-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                  />
+                </svg>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  No {activeFilter === 'all' ? '' : activeFilter} mentees found
+                </h3>
+                {activeFilter !== 'all' && (
+                  <button
+                    className="underline"
+                    style={{ color: '#FF9148' }}
+                    onClick={() => handleFilterChange('all')}
+                  >
+                    View all mentees
+                  </button>
+                )}
+              </div>
+            ) : (
+              <>
+                {/* Desktop Table */}
+                <div className="hidden md:block bg-white rounded-xl shadow-md overflow-hidden">
+                  <div className="overflow-x-auto">
                   <table className="w-full divide-y divide-gray-200" style={{ tableLayout: 'fixed' }}>
                     <thead className="bg-gray-50">
                       <tr>
@@ -566,6 +575,7 @@ const Mentees = () => {
             </Dialog>
           </Transition>
 
+          </div>
         </main>
       </div>
     </div>

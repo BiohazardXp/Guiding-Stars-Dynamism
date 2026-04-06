@@ -62,22 +62,55 @@ function Progress() {
         api.get('/mentors')
       ]);
 
-      // Enrich progress entries with names
-      const enrichedProgress = progressRes.data.map((entry: ProgressEntry) => {
-        const mentee = menteesRes.data.find((m: Mentee) => m.id === entry.mentee_id);
-        const mentor = mentorsRes.data.find((m: Mentor) => m.id === entry.mentor_id);
+      console.log('Progress API Response:', progressRes.data);
+      console.log('Mentees API Response:', menteesRes.data);
+      console.log('Mentors API Response:', mentorsRes.data);
+
+      // Extract data from response (handle both { data: [...] } and [...] formats)
+      const progressData = progressRes.data.data || progressRes.data;
+      const menteesData = menteesRes.data.data || menteesRes.data;
+      const mentorsData = mentorsRes.data.data || mentorsRes.data;
+
+      // Enrich progress entries with names from nested objects or lookups
+      const enrichedProgress = progressData.map((entry: any) => {
+        let mentee_name = 'Unknown';
+        let mentor_name = 'Unknown';
+
+        // If Mentee is included in the response (nested object)
+        if (entry.Mentee) {
+          mentee_name = `${entry.Mentee.first_name} ${entry.Mentee.last_name}`;
+        } else {
+          // Fallback to lookup
+          const mentee = menteesData.find((m: Mentee) => m.id === entry.mentee_id);
+          if (mentee) {
+            mentee_name = `${mentee.first_name} ${mentee.last_name}`;
+          }
+        }
+
+        // If Mentor is included in the response (nested object)
+        if (entry.Mentor) {
+          mentor_name = `${entry.Mentor.first_name} ${entry.Mentor.last_name}`;
+        } else {
+          // Fallback to lookup
+          const mentor = mentorsData.find((m: Mentor) => m.id === entry.mentor_id);
+          if (mentor) {
+            mentor_name = `${mentor.first_name} ${mentor.last_name}`;
+          }
+        }
+
         return {
           ...entry,
-          mentee_name: mentee ? `${mentee.first_name} ${mentee.last_name}` : 'Unknown',
-          mentor_name: mentor ? `${mentor.first_name} ${mentor.last_name}` : 'Unknown'
+          mentee_name,
+          mentor_name
         };
       });
 
       setProgressEntries(enrichedProgress);
-      setMentees(menteesRes.data.filter((m: Mentee) => m.application_status === 'active'));
-      setMentors(mentorsRes.data);
+      setMentees(menteesData.filter((m: Mentee) => m.application_status === 'active'));
+      setMentors(mentorsData);
       setError('');
     } catch (err: any) {
+      console.error('Fetch error:', err);
       setError(err.response?.data?.message || 'Failed to load progress data');
     } finally {
       setLoading(false);
@@ -185,12 +218,21 @@ function Progress() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-800">Progress Tracking</h1>
-        <p className="text-gray-600 mt-2">Monitor and record mentee progress throughout the program</p>
-      </div>
+    <div
+      className="min-h-screen"
+      style={{
+        backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url("/img/corporate image 3.jpeg")',
+        backgroundAttachment: 'fixed',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center'
+      }}
+    >
+      <div className="max-w-7xl mx-auto p-4 md:p-6">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-white">Progress Tracking</h1>
+          <p className="text-gray-300 mt-2">Monitor and record mentee progress throughout the program</p>
+        </div>
 
       {/* Alert Messages */}
       {error && (
@@ -530,6 +572,7 @@ function Progress() {
             </form>
           </div>
         )}
+      </div>
       </div>
     </div>
   );

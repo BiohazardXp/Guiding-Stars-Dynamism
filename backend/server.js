@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 require('dotenv').config();
 
 // 1. Import initializeDatabase from config
@@ -15,6 +16,9 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Serve static files from public directory (for uploaded images)
+app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
+
 // Routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/mentors', require('./routes/mentors'));
@@ -24,6 +28,7 @@ app.use('/api/progress', require('./routes/progress'));
 app.use('/api/dashboard', require('./routes/dashboard'));
 app.use('/api/mentee-auth', require('./routes/menteeAuth'));
 app.use('/api/mentee-portal', require('./routes/menteePortal'));
+app.use('/api/content', require('./routes/content'));
 
 // Health check route
 app.get('/', (req, res) => {

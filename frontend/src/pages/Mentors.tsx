@@ -133,13 +133,22 @@ const Mentors = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto">
+    <div
+      className="min-h-screen"
+      style={{
+        backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url("/img/corporate image 3.jpeg")',
+        backgroundAttachment: 'fixed',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center'
+      }}
+    >
+      <div className="max-w-7xl mx-auto p-4 md:p-6">
 
-      {/* Header */}
-      <div className="mb-6 md:mb-8">
-        <h1 className="text-2xl md:text-3xl font-bold text-gray-800">Mentors Management</h1>
-        <p className="text-gray-500 mt-2">Manage mentor profiles and availability</p>
-      </div>
+        {/* Header */}
+        <div className="mb-6 md:mb-8">
+          <h1 className="text-2xl md:text-3xl font-bold text-white">Mentors Management</h1>
+          <p className="text-gray-300 mt-2">Manage mentor profiles and availability</p>
+        </div>
 
       {/* Alerts */}
       {error && (
@@ -423,6 +432,7 @@ const Mentors = () => {
           </div>
         </Dialog>
       </Transition>
+      </div>
     </div>
   );
 };

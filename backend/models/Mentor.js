@@ -42,6 +42,12 @@ Mentor.associate = (models) => {
     foreignKey: 'mentor_id',
     as: 'Matches'
   });
+
+  // Mentor can have many progress entries
+  Mentor.hasMany(models.ProgressEntry, {
+    foreignKey: 'mentor_id',
+    as: 'ProgressEntries'
+  });
 };
 
 module.exports = Mentor;

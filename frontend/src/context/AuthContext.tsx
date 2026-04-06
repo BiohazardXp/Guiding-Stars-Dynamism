@@ -19,12 +19,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     /**
      * PERSISTENCE CHECK
-     * Admin: No check here. Admins must start at null on every refresh.
-     * Mentee: Still checked in localStorage for convenience.
+     * Check for both admin and mentee tokens on app load
      */
+    const adminToken = localStorage.getItem('admin_token');
     const menteeToken = localStorage.getItem('mentee_token');
     
-    if (menteeToken) {
+    if (adminToken) {
+      setToken(adminToken);
+      setRole('admin');
+    } else if (menteeToken) {
       setToken(menteeToken);
       setRole('mentee');
     }
@@ -33,16 +36,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = (newToken: string, userRole: string) => {
+    console.log('[AuthContext] Login called with:', { userRole, tokenLength: newToken?.length });
     if (userRole === 'admin') {
       /**
-       * ADMIN SECURITY:
-       * We do NOT save the token to localStorage or sessionStorage.
-       * It lives only in the 'token' state variable above.
+       * ADMIN LOGIN:
+       * Save token to localStorage so it persists across page reloads
        */
-      localStorage.removeItem('mentee_token'); 
+      localStorage.setItem('admin_token', newToken);
+      localStorage.removeItem('mentee_token');
+      console.log('[AuthContext] Saved admin_token to localStorage:', newToken.substring(0, 20) + '...');
     } else {
       // Mentees stay logged in via localStorage
       localStorage.setItem('mentee_token', newToken);
+      localStorage.removeItem('admin_token');
+      console.log('[AuthContext] Saved mentee_token to localStorage');
     }
     
     setToken(newToken);
@@ -50,6 +57,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const logout = () => {
+    localStorage.removeItem('admin_token');
     localStorage.removeItem('mentee_token');
     localStorage.removeItem('mentee_user');
     setToken(null);

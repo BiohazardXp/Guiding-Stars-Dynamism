@@ -5,23 +5,24 @@ const crypto = require('crypto');
 // Create email transporter (explicit host/port + verify)
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
-  port: 587,          // Changed from 465
-  secure: false,      // Changed to false for 587
+  port: 587,
+  secure: false,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASSWORD,
   },
   tls: {
-    rejectUnauthorized: false // Helps if you are on a strict local network
+    rejectUnauthorized: false
   }
 });
 
-// Verify transporter at startup to get immediate errors (DNS/auth/etc)
+// Verify transporter at startup to get immediate errors
 transporter.verify((err, success) => {
   if (err) {
-    console.error('Email transporter verification failed:', err);
+    console.error('❌ Email transporter verification failed:', err.message);
+    console.error('   Check EMAIL_USER and EMAIL_PASSWORD in .env file');
   } else {
-    console.log('Email transporter is ready');
+    console.log('✅ Email transporter is ready');
   }
 });
 
@@ -64,7 +65,7 @@ const sendWelcomeEmail = async (menteeEmail, menteeName, activationToken) => {
             background-color: #f9f9f9;
           }
           .header {
-            background-color: #2c3e50;
+            background-color: #FF9148;
             color: white;
             padding: 30px;
             text-align: center;
@@ -78,7 +79,7 @@ const sendWelcomeEmail = async (menteeEmail, menteeName, activationToken) => {
           .button {
             display: inline-block;
             padding: 15px 30px;
-            background-color: #3498db;
+            background-color: #FF9148;
             color: white;
             text-decoration: none;
             border-radius: 5px;

@@ -9,6 +9,17 @@
         "button-name": "off"
       }
     ],
-    "axe/forms": "off"
+    "axe/forms": "off",
+    "css-prefix-order": "off",
+    "compat-api/css": [
+      "off",
+      {
+        "ignore": [
+          "scrollbar-width"
+        ]
+      }
+    ],
+    "no-inline-styles": "off",
+    "axe/text-alternatives": "off"
   }
 }

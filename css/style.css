@@ -63,7 +63,7 @@ body{
     transition: .5s;
     
     background-color: #FF9148;
-    border: #2C3E4F;
+    border: #FF9148;
     border-radius: 15px;
 
 }
@@ -853,7 +853,7 @@ reservation
 .contact-form input:focus,
 .contact-form textarea:focus,
 .contact-form select:focus {
-  border-color: #fb5849;
+    border-color: #FF9148;
 }
 
 .contact-form button {
@@ -957,7 +957,7 @@ ACCORDION About Style
     z-index: -1;
     width: 84%;
     height: 100%;
-    background-color: #f1f0fe;
+    background-color: #FF9148;
     content: '';
     border-top-left-radius: 500px;
     border-bottom-left-radius: 500px;
@@ -984,10 +984,10 @@ ACCORDION About Style
     border-radius: 40px !important;
   }
   
-  .accordion-button:not(.collapsed) {
-    color: #7a6ad8;
-    background-color: #fff;
-  }
+    .accordion-button:not(.collapsed) {
+        color: #FF9148;
+        background-color: #fff;
+    }
   
   h2.accordion-header button {
     padding: 15px 25px;
@@ -1043,11 +1043,11 @@ ACCORDION About Style
 
  
 
-  .section-heading h2 em {
-    color: #7a6ad8;
-    font-style: normal;
+    .section-heading h2 em {
+        color: #FF9148;
+        font-style: normal;
     
-  }
+    }
   
  
 
@@ -1083,10 +1083,10 @@ ACCORDION About Style
       .about-us .section-heading .main-button {
         margin-top: 0px;
       }
-      .about-us .main-button a {
-        background-color: #7a6ad8;
-        color: #fff;
-      }
+            .about-us .main-button a {
+                background-color: #FF9148;
+                color: #fff;
+            }
 
 
 
@@ -1184,9 +1184,9 @@ section.contact-us #contact button:hover {
 }
 
 section.contact-us .right-info {
-  background-color: #9fa12c;
-  border-radius: 20px;
-  padding: 40px;
+    background-color: #FF9148;
+    border-radius: 20px;
+    padding: 40px;
 }
 
 section.contact-us .right-info ul li {
@@ -1344,7 +1344,7 @@ section.contact-us .right-info ul li span {
     font-size: 12px;
 }
 .fables-mega-menu li a.header-icon{
-    color: #2C3E4F;
+    color: #FF9148;
 }
 .max-line-height{
     line-height: 75px;
@@ -1356,8 +1356,8 @@ section.contact-us .right-info ul li span {
     top: 40px;
 }
 .fables-light-background-color .fables-mega-menu-btn {
-    border: 1px solid #2C3E4F !important; 
-    color: #2C3E4F !important;
+    border: 1px solid #FF9148 !important; 
+    color: #FF9148 !important;
 }
 .fables-header { 
     padding: 33px 0;
@@ -1434,8 +1434,8 @@ section.contact-us .right-info ul li span {
 .fables-btn-link::after {
     position: absolute;
     content: "";
-    background-color: #E54D42;
-    border: 2px solid #E54D42;
+    background-color: #FF9148;
+    border: 2px solid #FF9148;
     left: 0;
     right: 78%;
     border-radius: 30px;
@@ -1759,7 +1759,7 @@ section.contact-us .right-info ul li span {
 } 
 .fables-contact-hover-input:focus ~ label{
     bottom: 25px;  
-    color: #E54D42; 
+    color: #FF9148; 
 }
  
 .blog-single-slider .owl-dots{
@@ -1831,7 +1831,7 @@ align-items: center;
     width: 0;
     height: 0;
     border-top: 5px solid transparent;
-    border-left: 10px solid #E54D42;
+    border-left: 10px solid #FF9148;
     border-bottom: 5px solid transparent;
 }
 .fables-blog-recent-post{
@@ -1891,7 +1891,7 @@ align-items: center;
     background: -moz-linear-gradient(top, rgba(125,185,232,0) 0%, rgba(30,87,153,1) 100%);
     background: -webkit-linear-gradient(top, rgba(125,185,232,0) 0%,rgba(30,87,153,1) 100%);
     background: linear-gradient(to bottom, rgba(125,185,232,0) 0%,rgba(30,87,153,1) 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#007db9e8', endColorstr='#1e5799',GradientType=0 );
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#FF9148e8', endColorstr='#FF9148',GradientType=0 );
     height: 100%;
     bottom: 0;
     left: 0;

@@ -1,7 +1,5 @@
-import { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import api from '../services/api';
-import { AuthContext } from '../context/AuthContext';
 
 interface Mentor {
   id: number;
@@ -43,8 +41,6 @@ const inputBlur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement | 
 const inputClass = "w-full px-4 py-2 border border-gray-300 rounded-lg outline-none transition text-gray-800";
 
 function Matches() {
-  const auth = useContext(AuthContext);
-  const navigate = useNavigate();
 
   const [activeTab, setActiveTab] = useState<'existing' | 'create'>('existing');
   const [matches, setMatches] = useState<Match[]>([]);
@@ -60,14 +56,8 @@ function Matches() {
   const [matchNotes, setMatchNotes] = useState('');
 
   useEffect(() => {
-    const token = auth?.token || localStorage.getItem('token');
-    if (!token) {
-      setLoading(false);
-      navigate('/login');
-      return;
-    }
     fetchData();
-  }, [auth?.token]);
+  }, []);
 
   const fetchData = async () => {
     try {
@@ -78,9 +68,9 @@ function Matches() {
         api.get('/mentees'),
       ]);
 
-      const enrichedMatches = matchesRes.data.map((match: Match) => {
-        const mentor = mentorsRes.data.find((m: Mentor) => m.id === match.mentor_id);
-        const mentee = menteesRes.data.find((m: Mentee) => m.id === match.mentee_id);
+      const enrichedMatches = (matchesRes.data.data || matchesRes.data).map((match: Match) => {
+        const mentor = (mentorsRes.data.data || mentorsRes.data).find((m: Mentor) => m.id === match.mentor_id);
+        const mentee = (menteesRes.data.data || menteesRes.data).find((m: Mentee) => m.id === match.mentee_id);
         return {
           ...match,
           mentor_name: mentor
@@ -93,8 +83,8 @@ function Matches() {
       });
 
       setMatches(enrichedMatches);
-      setMentors(mentorsRes.data.filter((m: Mentor) => (m.status || '').toLowerCase() === 'active'));
-      setMentees(menteesRes.data.filter((m: Mentee) => (m.application_status || '').toLowerCase() === 'approved'));
+      setMentors((mentorsRes.data.data || mentorsRes.data).filter((m: Mentor) => (m.status || '').toLowerCase() === 'active'));
+      setMentees((menteesRes.data.data || menteesRes.data).filter((m: Mentee) => (m.application_status || '').toLowerCase() === 'approved'));
       setError('');
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to load data');
@@ -167,13 +157,22 @@ function Matches() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto">
+    <div
+      className="min-h-screen"
+      style={{
+        backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url("/img/corporate image 3.jpeg")',
+        backgroundAttachment: 'fixed',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center'
+      }}
+    >
+      <div className="max-w-7xl mx-auto p-4 md:p-6">
 
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-800">Mentor-Mentee Matches</h1>
-        <p className="text-gray-500 mt-2">Manage mentor-mentee pairings and track matching history</p>
-      </div>
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-white">Mentor-Mentee Matches</h1>
+          <p className="text-gray-300 mt-2">Manage mentor-mentee pairings and track matching history</p>
+        </div>
 
       {/* Alerts */}
       {error && (
@@ -408,6 +407,7 @@ function Matches() {
             </div>
           </div>
         ))}
+      </div>
       </div>
     </div>
   );

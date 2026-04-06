@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
 const Contact = () => {
   const inputFocus = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -18,7 +18,7 @@ const Contact = () => {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative mt-20">
+      <section className="relative">
         <img
           src="/img/Top-Bunner-1.jpg"
           alt="Contact Banner"
@@ -153,55 +153,7 @@ const Contact = () => {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-16">
-        <div className="container mx-auto px-6">
-          <div className="grid md:grid-cols-4 gap-12">
-            <div>
-              <img src="/img/HORIZONTAL (2).png" alt="Guiding Stars" className="h-16 mb-6" />
-              <p className="text-gray-300">Nurture Brilliance, Ignite Success.</p>
-              <div className="mt-6">
-                <Link to="/login" className="text-sm text-gray-400 hover:text-white transition">
-                  Staff Login
-                </Link>
-              </div>
-            </div>
-
-            <div>
-              <h6 className="uppercase font-bold mb-6" style={{ color: '#FF9148' }}>Contact</h6>
-              <p className="mb-4 text-gray-300"><i className="fa fa-map-marker-alt mr-3"></i>Plot 25866 Kabangwe, off Great North Road, Lusaka.</p>
-              <p className="mb-4 text-gray-300"><i className="fa fa-phone-alt mr-3"></i>+260 973 223 910</p>
-              <p className="text-gray-300"><i className="fa fa-envelope mr-3"></i>info@guidingstars.com</p>
-            </div>
-
-            <div>
-              <h6 className="uppercase font-bold mb-6" style={{ color: '#FF9148' }}>Company</h6>
-              <ul className="space-y-3 text-gray-300">
-                <li><Link to="/about" className="hover:text-white transition">About Us</Link></li>
-                <li><Link to="/contact" className="hover:text-white transition">Contact Us</Link></li>
-                <li><Link to="/apply" className="hover:text-white transition">Apply Now</Link></li>
-                <li><a href="#" className="hover:text-white transition">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-white transition">Terms & Condition</a></li>
-              </ul>
-            </div>
-
-            <div>
-              <h6 className="uppercase font-bold mb-6" style={{ color: '#FF9148' }}>Services</h6>
-              <ul className="space-y-3 text-gray-300">
-                <li><a href="#" className="hover:text-white transition">Personalized Guidance</a></li>
-                <li><a href="#" className="hover:text-white transition">Networking Opportunities</a></li>
-                <li><a href="#" className="hover:text-white transition">Industry Insights</a></li>
-                <li><a href="#" className="hover:text-white transition">Career Advancement</a></li>
-                <li><a href="#" className="hover:text-white transition">Personal Growth</a></li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="border-t border-gray-700 mt-12 pt-8 text-center text-gray-400">
-            © {new Date().getFullYear()} Guiding Stars. All Rights Reserved.
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };

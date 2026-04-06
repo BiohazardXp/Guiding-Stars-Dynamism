@@ -77,13 +77,22 @@ function Dashboard() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto">
+    <div
+      className="min-h-screen"
+      style={{
+        backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url("/img/corporate image 3.jpeg")',
+        backgroundAttachment: 'fixed',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center'
+      }}
+    >
+      <div className="max-w-7xl mx-auto p-4 md:p-6">
 
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-800">Dashboard</h1>
-        <p className="text-gray-500 mt-2">Welcome back! Here's an overview of your mentorship program.</p>
-      </div>
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-white">Dashboard</h1>
+          <p className="text-gray-300 mt-2">Welcome back! Here's an overview of your mentorship program.</p>
+        </div>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-6 md:mb-8">
@@ -231,6 +240,7 @@ function Dashboard() {
           </Link>
         </div>
 
+      </div>
       </div>
     </div>
   );

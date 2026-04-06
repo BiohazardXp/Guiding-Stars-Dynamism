@@ -8,4 +8,7 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+  server: {
+    allowedHosts: ['acrogynous-unaccommodable-queen.ngrok-free.dev']
+  }
 })

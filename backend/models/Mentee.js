@@ -26,6 +26,7 @@ const Mentee = sequelize.define('Mentee', {
 
 Mentee.associate = (models) => {
   Mentee.hasMany(models.Match, { foreignKey: 'mentee_id', as: 'Matches' });
+  Mentee.hasMany(models.ProgressEntry, { foreignKey: 'mentee_id', as: 'ProgressEntries' });
 };
 
 module.exports = Mentee;
