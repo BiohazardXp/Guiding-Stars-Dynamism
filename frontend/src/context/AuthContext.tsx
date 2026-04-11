@@ -11,22 +11,47 @@ interface AuthContextType {
 
 export const AuthContext = createContext<AuthContextType | null>(null);
 
+// Session timeout duration in milliseconds (15 minutes)
+const SESSION_TIMEOUT = 15 * 60 * 1000;
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useState<string | null>(null);
   const [role, setRole] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [inactivityTimer, setInactivityTimer] = useState<ReturnType<typeof setTimeout> | null>(null);
+
+  // Track user activity to reset inactivity timer
+  const resetInactivityTimer = () => {
+    // Clear existing timer
+    if (inactivityTimer) {
+      clearTimeout(inactivityTimer);
+    }
+
+    // Only set timer if user is logged in
+    if (token) {
+      const newTimer = setTimeout(() => {
+        console.log('[AuthContext] Session timeout due to inactivity');
+        logout();
+      }, SESSION_TIMEOUT);
+      setInactivityTimer(newTimer);
+    }
+  };
 
   useEffect(() => {
     /**
      * PERSISTENCE CHECK
-     * Check for both admin and mentee tokens on app load
+     * Check for admin, mentor, and mentee tokens on app load
      */
     const adminToken = localStorage.getItem('admin_token');
+    const mentorToken = localStorage.getItem('mentor_token');
     const menteeToken = localStorage.getItem('mentee_token');
     
     if (adminToken) {
       setToken(adminToken);
       setRole('admin');
+    } else if (mentorToken) {
+      setToken(mentorToken);
+      setRole('mentor');
     } else if (menteeToken) {
       setToken(menteeToken);
       setRole('mentee');
@@ -34,6 +59,42 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     setIsLoading(false);
   }, []);
+
+  // Reset inactivity timer on token change
+  useEffect(() => {
+    if (token) {
+      resetInactivityTimer();
+    }
+    return () => {
+      if (inactivityTimer) {
+        clearTimeout(inactivityTimer);
+      }
+    };
+  }, [token]);
+
+  // Track user activity (mouse, keyboard, scroll)
+  useEffect(() => {
+    const handleUserActivity = () => {
+      if (token) {
+        resetInactivityTimer();
+      }
+    };
+
+    // Add event listeners for user activity
+    window.addEventListener('mousemove', handleUserActivity);
+    window.addEventListener('keypress', handleUserActivity);
+    window.addEventListener('scroll', handleUserActivity);
+    window.addEventListener('click', handleUserActivity);
+    window.addEventListener('touchstart', handleUserActivity);
+
+    return () => {
+      window.removeEventListener('mousemove', handleUserActivity);
+      window.removeEventListener('keypress', handleUserActivity);
+      window.removeEventListener('scroll', handleUserActivity);
+      window.removeEventListener('click', handleUserActivity);
+      window.removeEventListener('touchstart', handleUserActivity);
+    };
+  }, [token, inactivityTimer]);
 
   const login = (newToken: string, userRole: string) => {
     console.log('[AuthContext] Login called with:', { userRole, tokenLength: newToken?.length });
@@ -57,11 +118,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const logout = () => {
+    console.log('[AuthContext] Logout called');
     localStorage.removeItem('admin_token');
     localStorage.removeItem('mentee_token');
     localStorage.removeItem('mentee_user');
     setToken(null);
     setRole(null);
+    if (inactivityTimer) {
+      clearTimeout(inactivityTimer);
+      setInactivityTimer(null);
+    }
   };
 
   return (

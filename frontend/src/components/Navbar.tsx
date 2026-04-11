@@ -11,13 +11,17 @@ const Navbar = () => {
   const hiddenPaths = [
     '/login',
     '/mentee/login',
+    '/mentor/login',
     '/mentee/dashboard',
+    '/mentor/portal',
     '/dashboard',
     '/mentors',
     '/mentees',
     '/matches',
     '/progress',
     '/content',
+    '/submissions',
+    '/mentor-applications',
   ];
 
   if (hiddenPaths.includes(location.pathname)) {

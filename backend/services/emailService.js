@@ -237,9 +237,42 @@ const sendRejectionEmail = async (menteeEmail, menteeName) => {
   }
 };
 
+/**
+ * Generic sendEmail function for any email (mentor applications, etc.)
+ * @param {string} to - Recipient email
+ * @param {string} subject - Email subject
+ * @param {string} htmlBody - Email body in HTML format
+ */
+const sendEmail = async (to, subject, htmlBody) => {
+  try {
+    if (!to || !subject || !htmlBody) {
+      return {
+        success: false,
+        error: 'Missing required parameters: to, subject, htmlBody'
+      };
+    }
+
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: to,
+      subject: subject,
+      html: htmlBody,
+      replyTo: 'guidingstars2024@gmail.com'
+    };
+
+    await transporter.sendMail(mailOptions);
+    console.log('Email sent to:', to);
+    return { success: true };
+  } catch (error) {
+    console.error('Error sending email:', error);
+    return { success: false, error: error.message };
+  }
+};
+
 // IMPORTANT: Export all functions
 module.exports = {
   sendWelcomeEmail,
   sendRejectionEmail,
+  sendEmail,
   generateVerificationToken
 };

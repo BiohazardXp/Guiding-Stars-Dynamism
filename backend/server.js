@@ -29,6 +29,9 @@ app.use('/api/dashboard', require('./routes/dashboard'));
 app.use('/api/mentee-auth', require('./routes/menteeAuth'));
 app.use('/api/mentee-portal', require('./routes/menteePortal'));
 app.use('/api/content', require('./routes/content'));
+app.use('/api/contact', require('./routes/contact'));
+app.use('/api/mentor-applications', require('./routes/mentorApplications'));
+app.use('/api/mentor-portal', require('./routes/mentorPortal'));
 
 // Health check route
 app.get('/', (req, res) => {

@@ -170,6 +170,58 @@ const Home = () => {
         </div>
       </section>
 
+      {/* Become a Mentor Section */}
+      <section className="py-16 md:py-20 bg-gray-50">
+        <div className="container mx-auto px-6">
+          <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg overflow-hidden">
+            <div className="grid md:grid-cols-2">
+              {/* Left: Content */}
+              <div className="p-8 md:p-12 flex flex-col justify-center">
+                <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900">
+                  Become a{' '}
+                  <span style={{ color: '#FF9148' }}>Mentor</span>
+                </h2>
+                <p className="text-gray-600 mb-6 leading-relaxed">
+                  Share your expertise and make a real impact on the next generation of professionals. 
+                  Whether you're a seasoned executive, rising manager, or specialist in your field, 
+                  we're looking for passionate mentors.
+                </p>
+                <div className="space-y-3 mb-8">
+                  <div className="flex items-center gap-3">
+                    <span className="text-xl" style={{ color: '#FF9148' }}>✓</span>
+                    <span className="text-gray-700">Shape emerging talent</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-xl" style={{ color: '#FF9148' }}>✓</span>
+                    <span className="text-gray-700">Expand your network</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-xl" style={{ color: '#FF9148' }}>✓</span>
+                    <span className="text-gray-700">Give back to your community</span>
+                  </div>
+                </div>
+                <Link
+                  to="/mentor-apply"
+                  className="inline-block text-white px-8 py-3 rounded-lg font-semibold hover:brightness-110 transition bg-gradient-to-br from-[#FF9148] to-[#E8722E] w-fit"
+                >
+                  APPLY AS A MENTOR
+                </Link>
+              </div>
+
+              {/* Right: Image */}
+              <div className="hidden md:block">
+                <img
+                  src="/img/guiding stars team.jpg"
+                  alt="Mentor"
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Call to Action */}
       <section
         className="py-16 md:py-20 text-white text-center"
@@ -211,44 +263,7 @@ const Home = () => {
           </div>
 
           <div className="max-w-3xl mx-auto bg-white p-8 md:p-10 rounded-2xl shadow-xl">
-            <form action="https://formspree.io/f/mqakpbga" method="POST">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
-                <input
-                  type="text"
-                  name="name"
-                  placeholder="YOUR NAME..."
-                  required
-                  className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF9148] focus:border-[#FF9148] outline-none transition text-base"
-                />
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="YOUR EMAIL..."
-                  required
-                  className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF9148] focus:border-[#FF9148] outline-none transition text-base"
-                />
-                <input
-                  type="text"
-                  name="subject"
-                  placeholder="SUBJECT..."
-                  required
-                  className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF9148] focus:border-[#FF9148] outline-none transition text-base"
-                />
-              </div>
-              <textarea
-                name="message"
-                placeholder="YOUR MESSAGE..."
-                required
-                rows={6}
-                className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF9148] focus:border-[#FF9148] outline-none transition mb-6 text-base"
-              />
-              <button
-                type="submit"
-                className="w-full text-white py-4 rounded-lg font-semibold text-lg transition hover:brightness-110 bg-gradient-to-br from-[#FF9148] to-[#E8722E]"
-              >
-                SEND MESSAGE NOW
-              </button>
-            </form>
+            <HomeContactForm />
           </div>
         </div>
       </section>
@@ -311,5 +326,125 @@ const Home = () => {
     </div>
   );
 };
+
+/**
+ * Home Contact Form Component
+ * Handles form submission to backend /api/contact endpoint
+ */
+function HomeContactForm() {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: '',
+  });
+  const [loading, setLoading] = useState(false);
+  const [response, setResponse] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
+    setResponse(null);
+
+    try {
+      const result = await api.post('/contact', {
+        ...formData,
+        source_page: 'home',
+      });
+
+      if (result.data.success) {
+        setResponse({
+          type: 'success',
+          message: result.data.message || 'Thank you! Your message has been received.',
+        });
+        setFormData({ name: '', email: '', subject: '', message: '' });
+      } else {
+        setResponse({
+          type: 'error',
+          message: result.data.message || 'Failed to send message. Please try again.',
+        });
+      }
+    } catch (error: any) {
+      setResponse({
+        type: 'error',
+        message: error.response?.data?.message || 'Failed to send message. Please try again.',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <>
+      {response && (
+        <div
+          className={`p-4 rounded-lg mb-6 text-center font-semibold ${
+            response.type === 'success'
+              ? 'bg-green-100 text-green-800 border border-green-300'
+              : 'bg-red-100 text-red-800 border border-red-300'
+          }`}
+        >
+          {response.message}
+        </div>
+      )}
+      <form onSubmit={handleSubmit}>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
+          <input
+            type="text"
+            name="name"
+            placeholder="YOUR NAME..."
+            value={formData.name}
+            onChange={handleChange}
+            required
+            disabled={loading}
+            className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF9148] focus:border-[#FF9148] outline-none transition text-base disabled:bg-gray-100"
+          />
+          <input
+            type="email"
+            name="email"
+            placeholder="YOUR EMAIL..."
+            value={formData.email}
+            onChange={handleChange}
+            required
+            disabled={loading}
+            className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF9148] focus:border-[#FF9148] outline-none transition text-base disabled:bg-gray-100"
+          />
+          <input
+            type="text"
+            name="subject"
+            placeholder="SUBJECT..."
+            value={formData.subject}
+            onChange={handleChange}
+            required
+            disabled={loading}
+            className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF9148] focus:border-[#FF9148] outline-none transition text-base disabled:bg-gray-100"
+          />
+        </div>
+        <textarea
+          name="message"
+          placeholder="YOUR MESSAGE..."
+          value={formData.message}
+          onChange={handleChange}
+          required
+          disabled={loading}
+          rows={6}
+          className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF9148] focus:border-[#FF9148] outline-none transition mb-6 text-base disabled:bg-gray-100"
+        />
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full text-white py-4 rounded-lg font-semibold text-lg transition hover:brightness-110 bg-gradient-to-br from-[#FF9148] to-[#E8722E] disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {loading ? 'SENDING...' : 'SEND MESSAGE NOW'}
+        </button>
+      </form>
+    </>
+  );
+}
 
 export default Home;

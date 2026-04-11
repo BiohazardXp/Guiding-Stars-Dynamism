@@ -1,18 +1,9 @@
+import { useState } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import api from '../services/api';
 
 const Contact = () => {
-  const inputFocus = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    e.target.style.borderColor = '#FF9148';
-    e.target.style.boxShadow = '0 0 0 3px rgba(255, 145, 72, 0.15)';
-  };
-  const inputBlur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    e.target.style.borderColor = '#d1d5db';
-    e.target.style.boxShadow = 'none';
-  };
-
-  const inputClass = "w-full p-4 border border-gray-300 rounded-lg outline-none transition text-gray-800 placeholder-gray-400";
-
   return (
     <div className="bg-white min-h-screen">
       <Navbar />
@@ -77,77 +68,7 @@ const Contact = () => {
 
             {/* Right: Contact Form */}
             <div className="bg-white p-8 rounded-xl shadow-lg">
-              <form action="https://formspree.io/f/mqakpbga" method="POST">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
-                  <div>
-                    <input
-                      name="name"
-                      type="text"
-                      placeholder="Your Name*"
-                      required
-                      className={inputClass}
-                      onFocus={inputFocus}
-                      onBlur={inputBlur}
-                    />
-                  </div>
-
-                  <div>
-                    <input
-                      name="phone"
-                      type="tel"
-                      placeholder="Phone Number*"
-                      required
-                      className={inputClass}
-                      onFocus={inputFocus}
-                      onBlur={inputBlur}
-                    />
-                  </div>
-
-                  <div className="sm:col-span-2">
-                    <input
-                      name="email"
-                      type="email"
-                      placeholder="Your Email Address*"
-                      required
-                      className={inputClass}
-                      onFocus={inputFocus}
-                      onBlur={inputBlur}
-                    />
-                  </div>
-
-                  <div className="sm:col-span-2">
-                    <input
-                      name="subject"
-                      type="text"
-                      placeholder="Subject*"
-                      required
-                      className={inputClass}
-                      onFocus={inputFocus}
-                      onBlur={inputBlur}
-                    />
-                  </div>
-
-                  <div className="sm:col-span-2">
-                    <textarea
-                      name="message"
-                      rows={6}
-                      placeholder="Message*"
-                      required
-                      className={`${inputClass} resize-none`}
-                      onFocus={inputFocus}
-                      onBlur={inputBlur}
-                    ></textarea>
-                  </div>
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full text-white py-4 rounded-lg font-semibold transition"
-                  style={{ background: 'linear-gradient(135deg, #FF9148, #E8722E)' }}
-                >
-                  SEND MESSAGE
-                </button>
-              </form>
+              <ContactForm />
             </div>
           </div>
         </div>
@@ -157,5 +78,174 @@ const Contact = () => {
     </div>
   );
 };
+
+/**
+ * Contact Form Component
+ * Handles form submission to backend /api/contact endpoint
+ */
+function ContactForm() {
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    subject: '',
+    message: '',
+  });
+  const [loading, setLoading] = useState(false);
+  const [response, setResponse] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+
+  const inputClass = "w-full p-4 border border-gray-300 rounded-lg outline-none transition text-gray-800 placeholder-gray-400";
+
+  const inputFocus = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    e.target.style.borderColor = '#FF9148';
+    e.target.style.boxShadow = '0 0 0 3px rgba(255, 145, 72, 0.15)';
+  };
+
+  const inputBlur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    e.target.style.borderColor = '#d1d5db';
+    e.target.style.boxShadow = 'none';
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
+    setResponse(null);
+
+    try {
+      const result = await api.post('/contact', {
+        ...formData,
+        source_page: 'contact',
+      });
+
+      if (result.data.success) {
+        setResponse({
+          type: 'success',
+          message: result.data.message || 'Thank you! Your message has been received.',
+        });
+        setFormData({ name: '', phone: '', email: '', subject: '', message: '' });
+      } else {
+        setResponse({
+          type: 'error',
+          message: result.data.message || 'Failed to send message. Please try again.',
+        });
+      }
+    } catch (error: any) {
+      setResponse({
+        type: 'error',
+        message: error.response?.data?.message || 'Failed to send message. Please try again.',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <>
+      {response && (
+        <div
+          className={`p-4 rounded-lg mb-6 text-center font-semibold ${
+            response.type === 'success'
+              ? 'bg-green-100 text-green-800 border border-green-300'
+              : 'bg-red-100 text-red-800 border border-red-300'
+          }`}
+        >
+          {response.message}
+        </div>
+      )}
+      <form onSubmit={handleSubmit}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+          <div>
+            <input
+              name="name"
+              type="text"
+              placeholder="Your Name*"
+              value={formData.name}
+              onChange={handleChange}
+              required
+              disabled={loading}
+              className={`${inputClass} disabled:bg-gray-100`}
+              onFocus={inputFocus}
+              onBlur={inputBlur}
+            />
+          </div>
+
+          <div>
+            <input
+              name="phone"
+              type="tel"
+              placeholder="Phone Number*"
+              value={formData.phone}
+              onChange={handleChange}
+              required
+              disabled={loading}
+              className={`${inputClass} disabled:bg-gray-100`}
+              onFocus={inputFocus}
+              onBlur={inputBlur}
+            />
+          </div>
+
+          <div className="sm:col-span-2">
+            <input
+              name="email"
+              type="email"
+              placeholder="Your Email Address*"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              disabled={loading}
+              className={`${inputClass} disabled:bg-gray-100`}
+              onFocus={inputFocus}
+              onBlur={inputBlur}
+            />
+          </div>
+
+          <div className="sm:col-span-2">
+            <input
+              name="subject"
+              type="text"
+              placeholder="Subject*"
+              value={formData.subject}
+              onChange={handleChange}
+              required
+              disabled={loading}
+              className={`${inputClass} disabled:bg-gray-100`}
+              onFocus={inputFocus}
+              onBlur={inputBlur}
+            />
+          </div>
+
+          <div className="sm:col-span-2">
+            <textarea
+              name="message"
+              rows={6}
+              placeholder="Message*"
+              value={formData.message}
+              onChange={handleChange}
+              required
+              disabled={loading}
+              className={`${inputClass} resize-none disabled:bg-gray-100`}
+              onFocus={inputFocus}
+              onBlur={inputBlur}
+            ></textarea>
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full text-white py-4 rounded-lg font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
+          style={{ background: 'linear-gradient(135deg, #FF9148, #E8722E)' }}
+        >
+          {loading ? 'SENDING...' : 'SEND MESSAGE'}
+        </button>
+      </form>
+    </>
+  );
+}
 
 export default Contact;

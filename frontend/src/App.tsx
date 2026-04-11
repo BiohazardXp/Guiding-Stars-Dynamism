@@ -26,6 +26,11 @@ import Team from './pages/Team';
 import VerifyEmail from './pages/VerifyEmail';
 import ForgotPassword from './pages/ForgotPassword';
 import Testimonials from './pages/Testimonials';
+import ContactSubmissions from './pages/ContactSubmissions';
+import MentorApply from './pages/MentorApply';
+import MentorApplications from './pages/MentorApplications';
+import MentorLogin from './pages/MentorLogin';
+import MentorPortal from './pages/MentorPortal';
 
 // --- HELPER COMPONENTS ---
 
@@ -52,14 +57,24 @@ function ProtectedRoute({ children, requiredRole }: { children: JSX.Element; req
 
   // Not logged in
   if (!token) {
-    const loginPath = requiredRole === 'admin' ? "/login" : "/mentee/login";
-    return <Navigate to={loginPath} replace />;
+    if (requiredRole === 'admin') {
+      return <Navigate to="/login" replace />;
+    } else if (requiredRole === 'mentor') {
+      return <Navigate to="/mentor/login" replace />;
+    } else {
+      return <Navigate to="/mentee/login" replace />;
+    }
   }
 
   // Logged in but wrong role
   if (role && role.toLowerCase() !== requiredRole.toLowerCase()) {
-    const fallbackPath = role.toLowerCase() === 'admin' ? "/dashboard" : "/mentee/dashboard";
-    return <Navigate to={fallbackPath} replace />;
+    if (role.toLowerCase() === 'admin') {
+      return <Navigate to="/dashboard" replace />;
+    } else if (role.toLowerCase() === 'mentor') {
+      return <Navigate to="/mentor/portal" replace />;
+    } else {
+      return <Navigate to="/mentee/dashboard" replace />;
+    }
   }
 
   // All checks passed
@@ -113,35 +128,39 @@ function PublicLayout({ children }: { children: JSX.Element }) {
 
 /**
  * Root Traffic Controller
+ * Always redirect to /home (public landing page)
  */
 function RootRedirect() {
-  const context = useContext(AuthContext);
-  if (!context || context.isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-gray-600">Loading...</div>
-      </div>
-    );
-  }
-
-  if (!context.token) return <Navigate to="/home" replace />;
-  
-  const dash = context.role?.toLowerCase() === 'admin' ? "/dashboard" : "/mentee/dashboard";
-  return <Navigate to={dash} replace />;
+  return <Navigate to="/home" replace />;
 }
 
 // --- MAIN APP ---
 
 function App() {
+  const location = window.location.pathname;
+  
+  // Don't show navbar in admin routes (they have their own layout) or on login pages
+  const isAdminRoute = location.startsWith('/dashboard') || 
+                       location.startsWith('/mentees') || 
+                       location.startsWith('/mentors') || 
+                       location.startsWith('/matches') || 
+                       location.startsWith('/progress') || 
+                       location.startsWith('/content') ||
+                       location.startsWith('/submissions') ||
+                       location.startsWith('/mentor-applications');
+  const isLoginPage = location === '/login' || location === '/mentee/login';
+  const showNavbar = !isAdminRoute && !isLoginPage;
+
   return (
     <Router>
-      <Navbar />
+      {showNavbar && <Navbar />}
       <Routes>
         {/* Public routes */}
   <Route path="/home" element={<PublicLayout><Home /></PublicLayout>} />
   <Route path="/about" element={<PublicLayout><About /></PublicLayout>} />
   <Route path="/activate/:token" element={<PublicLayout><Activate /></PublicLayout>} />
   <Route path="/apply" element={<PublicLayout><ApplyPage /></PublicLayout>} />
+  <Route path="/mentor-apply" element={<PublicLayout><MentorApply /></PublicLayout>} />
   <Route path="/contact" element={<PublicLayout><Contact /></PublicLayout>} />
   <Route path="/graduation" element={<PublicLayout><Graduation /></PublicLayout>} />
   <Route path="/team" element={<PublicLayout><Team /></PublicLayout>} />
@@ -154,6 +173,7 @@ function App() {
         <Route path="/login" element={<GuestRoute><Login /></GuestRoute>} />
         <Route path="/admin-login" element={<GuestRoute><Login /></GuestRoute>} />
         <Route path="/mentee/login" element={<GuestRoute><MenteeLogin /></GuestRoute>} />
+        <Route path="/mentor/login" element={<GuestRoute><MentorLogin /></GuestRoute>} />
 
         {/* Admin Routes - WITH Sidebar */}
         <Route path="/dashboard" element={
@@ -186,11 +206,28 @@ function App() {
             <AdminLayout><ContentManagement /></AdminLayout>
           </ProtectedRoute>
         } />
+        <Route path="/submissions" element={
+          <ProtectedRoute requiredRole="admin">
+            <AdminLayout><ContactSubmissions /></AdminLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/mentor-applications" element={
+          <ProtectedRoute requiredRole="admin">
+            <AdminLayout><MentorApplications /></AdminLayout>
+          </ProtectedRoute>
+        } />
 
         {/* Mentee Routes - WITHOUT Sidebar (has its own header) */}
         <Route path="/mentee/dashboard" element={
           <ProtectedRoute requiredRole="mentee">
             <MenteeLayout><MenteeDashboard /></MenteeLayout>
+          </ProtectedRoute>
+        } />
+
+        {/* Mentor Routes - WITHOUT Sidebar (has its own header) */}
+        <Route path="/mentor/portal" element={
+          <ProtectedRoute requiredRole="mentor">
+            <MenteeLayout><MentorPortal /></MenteeLayout>
           </ProtectedRoute>
         } />
 

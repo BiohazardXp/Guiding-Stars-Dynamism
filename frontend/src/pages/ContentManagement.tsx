@@ -1,8 +1,6 @@
 // src/pages/ContentManagement.tsx
-import { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import api from '../services/api';
-import { AuthContext } from '../context/AuthContext';
 
 interface ContentItem {
   id: number;
@@ -18,10 +16,9 @@ interface ContentItem {
 }
 
 function ContentManagement() {
-  const navigate = useNavigate();
-  const auth = useContext(AuthContext);
   const [contents, setContents] = useState<ContentItem[]>([]);
-  const [selectedSection, setSelectedSection] = useState<string>('hero');
+  const [selectedPage] = useState<string>('home');
+  const [selectedSection] = useState<string>('hero');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -44,8 +41,16 @@ function ContentManagement() {
   const pages = ['home', 'about', 'team', 'contact', 'apply', 'graduation'];
 
   useEffect(() => {
+    // Load all content once on mount. UI filters locally by page/section.
     fetchContents();
-  }, [selectedSection]);
+  }, []);
+
+  // Keep the form's page in sync with the selected page when not editing
+  useEffect(() => {
+    if (!editingId) {
+      setFormData((f) => ({ ...f, page: selectedPage }));
+    }
+  }, [selectedPage, editingId]);
 
   const fetchContents = async () => {
     try {
@@ -150,13 +155,15 @@ function ContentManagement() {
       title: '',
       content_type: 'textarea',
       value: '',
-      section: 'hero',
-      page: 'home',
+      section: selectedSection || 'hero',
+      page: selectedPage || 'home',
       description: ''
     });
   };
 
-  const filteredContents = contents.filter(item => item.section === selectedSection);
+  const filteredContents = contents.filter(
+    (item) => item.page === selectedPage && (selectedSection === 'all' ? true : item.section === selectedSection)
+  );
 
   if (loading) return <div className="flex justify-center items-center h-screen text-xl">Loading...</div>;
 
@@ -166,53 +173,21 @@ function ContentManagement() {
       backgroundColor: 'rgba(0, 0, 0, 0.3)'
     }}>
       <div className="max-w-7xl mx-auto p-4 md:p-6">
-        {/* Header with Logout */}
-        <div className="mb-8 flex justify-between items-start">
-          <div>
-            <h1 className="text-4xl font-bold text-white mb-2">Content Management</h1>
-            <p className="text-gray-300">Update website content without touching code</p>
-          </div>
-          <button
-            onClick={() => {
-              auth?.logout();
-              navigate('/admin-login', { replace: true });
-            }}
-            className="px-6 py-2 bg-red-500 text-white rounded font-medium hover:bg-red-600 transition"
-            title="Sign out of admin panel"
-          >
-            Logout
-          </button>
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold text-white mb-2">Content Management</h1>
+          <p className="text-gray-300">Update website content without touching code</p>
         </div>
 
         {/* Alerts */}
         {error && <div className="mb-4 p-4 bg-red-500 text-white rounded">{error}</div>}
         {success && <div className="mb-4 p-4 bg-green-500 text-white rounded">{success}</div>}
 
-        {/* Section Tabs */}
-        <div className="mb-6 flex flex-wrap gap-2">
-          {sections.map(section => (
-            <button
-              key={section}
-              onClick={() => setSelectedSection(section)}
-              className={`px-4 py-2 rounded font-medium transition ${
-                selectedSection === section
-                  ? 'bg-orange-500 text-white'
-                  : 'bg-white text-gray-700 hover:bg-gray-100'
-              }`}
-            >
-              {section.charAt(0).toUpperCase() + section.slice(1)}
-            </button>
-          ))}
-        </div>
-
-        {/* Add New Button */}
-        <div className="mb-6">
-          <button
-            onClick={() => setShowAddForm(!showAddForm)}
-            className="px-6 py-2 bg-orange-500 text-white rounded font-medium hover:bg-orange-600 transition"
-          >
-            {showAddForm ? 'Cancel' : '+ Add New Content'}
-          </button>
+        {/* Breadcrumb: Page > Content */}
+        <div className="mb-3 text-sm text-gray-300">
+          Page: <span className="font-semibold text-white ml-2">{selectedPage.charAt(0).toUpperCase() + selectedPage.slice(1)}</span>
+          <span className="mx-2">/</span>
+          <span>Content</span>
         </div>
 
         {/* Add Form */}

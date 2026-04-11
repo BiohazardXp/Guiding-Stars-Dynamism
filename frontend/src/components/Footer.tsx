@@ -28,7 +28,7 @@ const Footer = () => {
     <footer className="bg-gray-900 text-white py-12 md:py-16">
       <div className="container mx-auto px-6">
         {/* Footer Grid */}
-        <div className="grid md:grid-cols-4 gap-8 mb-8 md:mb-12">
+        <div className="grid md:grid-cols-5 gap-8 mb-8 md:mb-12">
           {/* About Section */}
           <div>
             <h4 className="text-lg font-bold mb-4" style={{ color: '#FF9148' }}>
@@ -134,6 +134,35 @@ const Footer = () => {
                 </p>
               )}
             </div>
+          </div>
+
+          {/* Portal Access */}
+          <div>
+            <h4 className="text-lg font-bold mb-4" style={{ color: '#FF9148' }}>
+              Portal Access
+            </h4>
+            <ul className="text-gray-400 text-sm space-y-2">
+              <li>
+                <Link to="/mentor/login" className="hover:text-orange-400 transition">
+                  Mentor Login
+                </Link>
+              </li>
+              <li>
+                <Link to="/mentee/login" className="hover:text-orange-400 transition">
+                  Mentee Login
+                </Link>
+              </li>
+              <li>
+                <Link to="/mentor-apply" className="hover:text-orange-400 transition">
+                  Become a Mentor
+                </Link>
+              </li>
+              <li>
+                <Link to="/apply" className="hover:text-orange-400 transition">
+                  Apply as Mentee
+                </Link>
+              </li>
+            </ul>
           </div>
         </div>
 
