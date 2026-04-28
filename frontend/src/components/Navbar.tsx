@@ -4,7 +4,6 @@ import { Link, useLocation } from 'react-router-dom';
 
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [eventsOpen, setEventsOpen] = useState(false);
   const location = useLocation();
 
   // Hide navbar on admin/mentee pages
@@ -64,18 +63,7 @@ const Navbar = () => {
           <Link to="/team" className="font-semibold hover:text-orange-300 transition">Team</Link>
           <Link to="/testimonials" className="font-semibold hover:text-orange-300 transition">Testimonials</Link>
           <Link to="/contact" className="font-semibold hover:text-orange-300 transition">Contact Us</Link>
-
-          {/* Events Dropdown */}
-          <div className="relative group">
-            <button className="font-semibold hover:text-orange-300 transition flex items-center">
-              Events <span className="ml-1">▼</span>
-            </button>
-            <div className="absolute hidden group-hover:block bg-white text-gray-800 shadow-lg rounded mt-2 w-48 z-50">
-              <Link to="/graduation" className="block px-4 py-2 hover:bg-gray-100">
-                First Cohort Graduation
-              </Link>
-            </div>
-          </div>
+          <Link to="/graduation" className="font-semibold hover:text-orange-300 transition">Events</Link>
 
           {/* Apply Now Button */}
           <Link
@@ -141,26 +129,13 @@ const Navbar = () => {
             Contact Us
           </Link>
 
-          {/* Events accordion */}
-          <div className="border-b border-gray-500">
-            <button
-              className="w-full text-left font-semibold py-2 hover:text-orange-300 transition flex justify-between items-center"
-              onClick={() => setEventsOpen(!eventsOpen)}
-            >
-              Events <span>{eventsOpen ? '▲' : '▼'}</span>
-            </button>
-            {eventsOpen && (
-              <div className="pl-4 pb-2">
-                <Link
-                  to="/graduation"
-                  className="block py-2 text-gray-200 hover:text-orange-300 transition"
-                  onClick={() => { setMobileOpen(false); setEventsOpen(false); }}
-                >
-                  First Cohort Graduation
-                </Link>
-              </div>
-            )}
-          </div>
+          <Link
+            to="/graduation"
+            className="block font-semibold py-2 border-b border-gray-500 hover:text-orange-300 transition"
+            onClick={() => setMobileOpen(false)}
+          >
+            Events
+          </Link>
 
           <Link
             to="/apply"
