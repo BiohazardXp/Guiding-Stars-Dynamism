@@ -16,10 +16,11 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Serve static files from public directory (for uploaded images)
+// Serve static files from public directory (React & uploads)
+app.use(express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
 
-// Routes
+// API Routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/mentors', require('./routes/mentors'));
 app.use('/api/mentees', require('./routes/mentees'));
@@ -33,9 +34,9 @@ app.use('/api/contact', require('./routes/contact'));
 app.use('/api/mentor-applications', require('./routes/mentorApplications'));
 app.use('/api/mentor-portal', require('./routes/mentorPortal'));
 
-// Health check route
-app.get('/', (req, res) => {
-  res.json({ message: 'Guiding Stars API is running!' });
+// SPA Fallback using middleware (works with Express 5)
+app.use((req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Startup function

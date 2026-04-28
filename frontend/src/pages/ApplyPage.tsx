@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import api from '../services/api';
 
 const ApplyPage = () => {
   const [formData, setFormData] = useState({
@@ -30,9 +30,7 @@ const ApplyPage = () => {
     console.log('Sending data:', formData);
 
     try {
-      const response = await axios.post('http://localhost:5000/api/mentees', formData, {
-        headers: { 'Content-Type': 'application/json' }
-      });
+      const response = await api.post('/mentees', formData);
 
       console.log('Response:', response.data);
 
