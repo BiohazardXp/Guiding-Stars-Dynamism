@@ -16,8 +16,8 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Serve static files from public directory (React & uploads)
-app.use(express.static(path.join(__dirname, 'public')));
+// Serve static files from frontend dist directory (built React frontend)
+app.use(express.static(path.join(__dirname, 'frontend/dist')));
 app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
 
 // API Routes
@@ -36,7 +36,7 @@ app.use('/api/mentor-portal', require('./routes/mentorPortal'));
 
 // SPA Fallback using middleware (works with Express 5)
 app.use((req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.sendFile(path.join(__dirname, 'frontend/dist', 'index.html'));
 });
 
 // Startup function
