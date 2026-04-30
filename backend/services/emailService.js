@@ -4,7 +4,7 @@ const crypto = require('crypto');
 
 // Create email transporter (Namecheap mail server)
 const transporter = nodemailer.createTransport({
-  host: 'mail.guidingstarszm.com',
+  host: 'guidingstarszm.com',
   port: 465,
   secure: true,
   auth: {
