@@ -39,47 +39,30 @@ function MenteeLogin() {
     }
   };
 
-  const inputFocus = (e: React.FocusEvent<HTMLInputElement>) => {
-    e.target.style.borderColor = '#FF9148';
-    e.target.style.boxShadow = '0 0 0 3px rgba(255,145,72,0.15)';
-  };
-  const inputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    e.target.style.borderColor = '#d1d5db';
-    e.target.style.boxShadow = 'none';
-  };
-
   return (
     <div
       className="min-h-screen flex items-center justify-center p-4"
-      style={{ background: 'linear-gradient(135deg, #FFB27A 0%, #FF9148 45%, #E8722E 100%)' }}
+      style={{
+        backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url("/img/corporate image 3.jpeg")',
+        backgroundAttachment: 'fixed',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center'
+      }}
     >
       <div className="max-w-md w-full">
 
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="inline-block p-4 bg-white rounded-full shadow-lg mb-4">
-            <svg
-              className="w-12 h-12"
-              style={{ color: '#FF9148' }}
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
-              />
-            </svg>
-          </div>
+          <Link to="/" className="inline-block hover:opacity-80 transition-opacity">
+            <img src="/img/HORIZONTAL.png" alt="Guiding Stars" className="h-24 mx-auto mb-4" />
+          </Link>
           <h1 className="text-4xl font-bold text-white mb-2">Guiding Stars</h1>
-          <p className="text-white opacity-80">Mentee Portal</p>
+          <p className="text-white/80">Mentee Portal</p>
         </div>
 
         {/* Login Card */}
         <div className="bg-white rounded-2xl shadow-2xl p-8">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Welcome Back</h2>
+          <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Sign In</h2>
 
           {error && (
             <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 text-sm">
@@ -101,8 +84,9 @@ function MenteeLogin() {
                 required
                 placeholder="your.email@example.com"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg outline-none transition text-gray-800"
-                onFocus={inputFocus}
-                onBlur={inputBlur}
+                style={{ outline: 'none' }}
+                onFocus={(e) => (e.target.style.borderColor = '#FF9148')}
+                onBlur={(e) => (e.target.style.borderColor = '#d1d5db')}
               />
             </div>
 
@@ -118,8 +102,9 @@ function MenteeLogin() {
                 required
                 placeholder="••••••••"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg outline-none transition text-gray-800"
-                onFocus={inputFocus}
-                onBlur={inputBlur}
+                style={{ outline: 'none' }}
+                onFocus={(e) => (e.target.style.borderColor = '#FF9148')}
+                onBlur={(e) => (e.target.style.borderColor = '#d1d5db')}
               />
             </div>
 
@@ -148,7 +133,7 @@ function MenteeLogin() {
               type="submit"
               disabled={loading}
               className="w-full text-white py-3 rounded-lg font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
-              style={{ background: loading ? '#d1d5db' : 'linear-gradient(135deg, #FF9148, #E8722E)' }}
+              style={{ background: 'linear-gradient(135deg, #FF9148, #E8722E)' }}
             >
               {loading ? 'Signing in...' : 'Sign In'}
             </button>
@@ -177,7 +162,7 @@ function MenteeLogin() {
 
         {/* Footer */}
         <div className="text-center mt-6">
-          <p className="text-sm text-white opacity-75">
+          <p className="text-sm text-white/75">
             © 2026 Guiding Stars. All rights reserved.
           </p>
         </div>

@@ -65,11 +65,16 @@ const sendWelcomeEmail = async (menteeEmail, menteeName, activationToken) => {
             background-color: #f9f9f9;
           }
           .header {
-            background-color: #FF9148;
+            background: linear-gradient(135deg, #FF9148, #E8722E);
             color: white;
             padding: 30px;
             text-align: center;
             border-radius: 8px 8px 0 0;
+          }
+          .logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
           }
           .content {
             background-color: white;
@@ -79,7 +84,7 @@ const sendWelcomeEmail = async (menteeEmail, menteeName, activationToken) => {
           .button {
             display: inline-block;
             padding: 15px 30px;
-            background-color: #FF9148;
+            background: linear-gradient(135deg, #FF9148, #E8722E);
             color: white;
             text-decoration: none;
             border-radius: 5px;
@@ -97,7 +102,8 @@ const sendWelcomeEmail = async (menteeEmail, menteeName, activationToken) => {
       <body>
         <div class="container">
           <div class="header">
-            <h1>Welcome to Guiding Stars! 🌟</h1>
+            <img src="https://guidingstarszm.com/img/HORIZONTAL.png" alt="Guiding Stars" class="logo">
+            <h1 style="margin: 0;">Welcome to Guiding Stars! 🌟</h1>
           </div>
           <div class="content">
             <h2>Congratulations, ${menteeName}!</h2>
@@ -106,25 +112,20 @@ const sendWelcomeEmail = async (menteeEmail, menteeName, activationToken) => {
             <p>To get started, please activate your account by clicking the button below:</p>
             
             <div style="text-align: center;">
-              <a href="${activationLink}" class="button">Activate My Account</a>
+              <a href="${activationLink}" class="button">🚀 Activate My Account</a>
             </div>
-            
-            <p>Or copy and paste this link into your browser:</p>
-            <p style="background-color: #ecf0f1; padding: 10px; word-break: break-all;">
-              ${activationLink}
-            </p>
             
             <p><strong>This activation link will expire in 7 days.</strong></p>
             
             <p>Once activated, you will be able to:</p>
             <ul>
-              <li>View your mentor profile</li>
-              <li>Track your progress</li>
-              <li>Access program resources</li>
-              <li>Communicate with your mentor</li>
+              <li>✓ View your mentor profile</li>
+              <li>✓ Track your progress</li>
+              <li>✓ Access program resources</li>
+              <li>✓ Communicate with your mentor</li>
             </ul>
             
-            <p>If you have any questions, feel free to reach out to us.</p>
+            <p>If you have any questions, feel free to reach out to us at <strong>admissions@guidingstarszm.com</strong></p>
             
             <p>Best regards,<br>
             <strong>The Guiding Stars Team</strong></p>
