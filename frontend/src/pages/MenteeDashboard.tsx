@@ -135,22 +135,22 @@ function MenteeDashboard() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Sticky Header */}
-      <header className="sticky top-0 z-50 bg-white shadow-md border-b-2 border-orange-500">
+      <header className="sticky top-0 z-50 shadow-md border-b-2 border-orange-500" style={{ backgroundColor: '#666565' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <img src="/img/HORIZONTAL.png" alt="Guiding Stars" className="h-10" />
               <div className="hidden md:block">
-                <p className="text-sm text-gray-600">Mentee Portal</p>
+                <p className="text-sm text-gray-300">Mentee Portal</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-700 font-medium hidden sm:inline">
+              <span className="text-sm text-gray-200 font-medium hidden sm:inline">
                 {data.mentee.first_name} {data.mentee.last_name}
               </span>
               <button
                 onClick={handleLogout}
-                className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-white hover:bg-orange-500 rounded-lg transition font-medium"
+                className="flex items-center gap-2 px-4 py-2 text-gray-300 hover:text-white hover:bg-orange-500 rounded-lg transition font-medium"
               >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
