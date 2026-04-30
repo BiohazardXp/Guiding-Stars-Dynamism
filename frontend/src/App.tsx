@@ -149,7 +149,8 @@ function App() {
                        location.startsWith('/submissions') ||
                        location.startsWith('/mentor-applications');
   const isLoginPage = location === '/login' || location === '/mentee/login';
-  const showNavbar = !isAdminRoute && !isLoginPage;
+  const isActivationPage = location.startsWith('/activate') || location === '/verify-email';
+  const showNavbar = !isAdminRoute && !isLoginPage && !isActivationPage;
 
   return (
     <Router>
@@ -158,14 +159,14 @@ function App() {
         {/* Public routes */}
   <Route path="/home" element={<PublicLayout><Home /></PublicLayout>} />
   <Route path="/about" element={<PublicLayout><About /></PublicLayout>} />
-  <Route path="/activate/:token" element={<PublicLayout><Activate /></PublicLayout>} />
+  <Route path="/activate/:token" element={<VerifyEmail />} />
   <Route path="/apply" element={<PublicLayout><ApplyPage /></PublicLayout>} />
   <Route path="/mentor-apply" element={<PublicLayout><MentorApply /></PublicLayout>} />
   <Route path="/contact" element={<PublicLayout><Contact /></PublicLayout>} />
   <Route path="/graduation" element={<PublicLayout><Graduation /></PublicLayout>} />
   <Route path="/team" element={<PublicLayout><Team /></PublicLayout>} />
   <Route path="/testimonials" element={<PublicLayout><Testimonials /></PublicLayout>} />
-  <Route path="/verify-email" element={<PublicLayout><VerifyEmail /></PublicLayout>} />
+  <Route path="/verify-email" element={<VerifyEmail />} />
   <Route path="/resend-verification" element={<PublicLayout><ResendVerification /></PublicLayout>} />
   <Route path="/forgot-password" element={<PublicLayout><ForgotPassword /></PublicLayout>} />
 
