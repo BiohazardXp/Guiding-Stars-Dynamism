@@ -93,7 +93,7 @@ function MentorPortal() {
         return;
       }
 
-      const response = await axios.get('http://localhost:5000/api/mentor-portal/dashboard', {
+      const response = await axios.get('/api/mentor-portal/dashboard', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
