@@ -16,10 +16,12 @@ const faqs = [
 ];
 
 const values = [
-  { title: 'Authenticity', icon: '✦' },
-  { title: 'Innovation', icon: '✦' },
-  { title: 'Transparency', icon: '✦' },
-  { title: 'Sustainability', icon: '✦' },
+  { title: 'Authenticity', desc: 'Staying true to our mission, vision, and the people we serve.', icon: '✦' },
+  { title: 'Excellence', desc: 'Striving for the highest standards in everything we do.', icon: '✦' },
+  { title: 'Innovation', desc: 'Embracing creativity and new ideas to deliver lasting impact.', icon: '✦' },
+  { title: 'Transparency', desc: 'Building trust through openness, honesty, and accountability.', icon: '✦' },
+  { title: 'Sustainability', desc: 'Creating enduring solutions for individuals, communities, and society.', icon: '✦' },
+  { title: 'Customer Focus', desc: 'Prioritizing the growth, needs, and aspirations of our mentees and partners.', icon: '✦' },
 ];
 
 const pillars = [
@@ -106,16 +108,14 @@ const About = () => {
             >
               <h3 className="text-2xl font-bold mb-4">Our Mission</h3>
               <p className="leading-relaxed opacity-95">
-                To Foster a Dynamic Learning Environment Where Aspiring Marketing Students and
-                Graduates will Build Knowledge to Bridge the Gap Between Academia and Practice,
-                Cultivate Confidence, Character and Skills to Lead in the Marketing Space Globally.
+                To foster a dynamic, purpose-driven learning environment where aspiring youth gain the knowledge, skills, and confidence to bridge the gap between academia and real-world practice.
               </p>
             </div>
 
             <div className="bg-gray-900 p-8 rounded-xl shadow-lg text-white">
               <h3 className="text-2xl font-bold mb-4">Our Vision</h3>
               <p className="leading-relaxed text-gray-300">
-                To Elevate, Educate, Empower and Transform Marketers Futures Together.
+                To Elevate, Educate, Empower, and Transform Futures, together building a generation of leaders equipped to thrive in the global arena.
               </p>
             </div>
           </div>
@@ -181,7 +181,7 @@ const About = () => {
             </p>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-4xl mx-auto">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
             {values.map((value, idx) => (
               <div
                 key={idx}
@@ -194,7 +194,8 @@ const About = () => {
                 }}
               >
                 <div className="text-2xl mb-3 opacity-80">{value.icon}</div>
-                <h4 className="font-bold text-lg">{value.title}</h4>
+                <h4 className="font-bold text-lg mb-2">{value.title}</h4>
+                <p className="text-sm opacity-90 leading-relaxed">{value.desc}</p>
               </div>
             ))}
           </div>

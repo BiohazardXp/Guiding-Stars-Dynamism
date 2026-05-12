@@ -1,82 +1,94 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import api from '../services/api';
 
-interface Testimonial {
-  id: string;
-  name: string;
-  title: string;
-  content: string;
-  image?: string;
-}
+const topBanner = "/img/Top-Bunner-1.jpg";
+
+// Testimonials organized by cohort with images
+const testimonialsByCohort = {
+  cohort2: {
+    title: "Cohort Two Testimonials",
+    testimonials: [
+      {
+        id: '1',
+        name: 'Testimonial 1',
+        role: 'Mentee',
+        content: 'The mentorship I received through Guiding Stars has been invaluable. My mentor provided guidance that accelerated my professional growth significantly.',
+        image: '/img/Testimonials/cohort 2/WhatsApp Image 2026-04-30 at 11.48.46.jpeg',
+      },
+      {
+        id: '2',
+        name: 'Testimonial 2',
+        role: 'Mentee',
+        content: 'Being part of Guiding Stars has transformed my perspective on leadership and career development. I feel more confident and prepared for the future.',
+        image: '/img/Testimonials/cohort 2/WhatsApp Image 2026-04-30 at 11.48.48.jpeg',
+      },
+      {
+        id: '3',
+        name: 'Testimonial 3',
+        role: 'Mentee',
+        content: 'The support and guidance I received from my mentor has been instrumental in my personal and professional growth. I am grateful for this opportunity.',
+        image: '/img/Testimonials/cohort 2/WhatsApp Image 2026-04-30 at 11.48.50 (1).jpeg',
+      },
+      {
+        id: '4',
+        name: 'Testimonial 4',
+        role: 'Mentee',
+        content: 'This program has given me the tools and confidence I need to succeed. The mentorship experience has been transformational and inspiring.',
+        image: '/img/Testimonials/cohort 2/WhatsApp Image 2026-04-30 at 11.48.50.jpeg',
+      },
+    ]
+  },
+  cohort3: {
+    title: "Cohort Three Testimonials",
+    testimonials: [
+      {
+        id: '1',
+        name: 'Testimonial 1',
+        role: 'Mentee',
+        content: 'Through Guiding Stars, I have discovered my potential and gained the confidence to pursue my dreams. The mentorship has been life-changing.',
+        image: '/img/Testimonials/cohort 3/WhatsApp Image 2026-04-30 at 11.48.22.jpeg',
+      },
+    ]
+  },
+  cohort4: {
+    title: "Cohort Four Testimonials",
+    testimonials: [
+      {
+        id: '1',
+        name: 'Testimonial 1',
+        role: 'Mentee',
+        content: 'Guiding Stars has provided me with exceptional mentorship and networking opportunities that have shaped my career path positively.',
+        image: '/img/Testimonials/cohort 4/WhatsApp Image 2026-04-30 at 11.48.08.jpeg',
+      },
+      {
+        id: '2',
+        name: 'Testimonial 2',
+        role: 'Mentee',
+        content: 'The program exceeded my expectations. The guidance, support, and community have been invaluable in my journey.',
+        image: '/img/Testimonials/cohort 4/WhatsApp Image 2026-04-30 at 11.48.13.jpeg',
+      },
+      {
+        id: '3',
+        name: 'Testimonial 3',
+        role: 'Mentee',
+        content: 'I am grateful for the mentorship and the opportunity to grow both personally and professionally through Guiding Stars.',
+        image: '/img/Testimonials/cohort 4/WhatsApp Image 2026-04-30 at 11.48.14 (1).jpeg',
+      },
+      {
+        id: '4',
+        name: 'Testimonial 4',
+        role: 'Mentee',
+        content: 'This mentorship program has been a game-changer for me. I feel empowered and ready to make a difference in my field.',
+        image: '/img/Testimonials/cohort 4/WhatsApp Image 2026-04-30 at 11.48.14.jpeg',
+      },
+    ]
+  },
+};
 
 const Testimonials = () => {
-  const [content, setContent] = useState<Record<string, any>>({});
-  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    document.title = 'Testimonials - Guiding Stars';
-    
-    // Fetch CMS content
-    api.get('/content')
-      .then(res => {
-        const contentMap = res.data?.data || {};
-        setContent(contentMap);
-        
-        // Parse testimonials from CMS content
-        // Look for testimonial_* keys in the content
-        const testimonialList: Testimonial[] = [];
-        for (let i = 1; i <= 10; i++) {
-          const nameKey = `testimonial_${i}_name`;
-          const titleKey = `testimonial_${i}_title`;
-          const contentKey = `testimonial_${i}_content`;
-          const imageKey = `testimonial_${i}_image`;
-          
-          if (contentMap[nameKey] && contentMap[contentKey]) {
-            testimonialList.push({
-              id: String(i),
-              name: contentMap[nameKey] || '',
-              title: contentMap[titleKey] || '',
-              content: contentMap[contentKey] || '',
-              image: contentMap[imageKey],
-            });
-          }
-        }
-        
-        // If no testimonials from CMS, use defaults
-        if (testimonialList.length === 0) {
-          setTestimonials([
-            {
-              id: '1',
-              name: 'Elizabeth Kabanda',
-              title: 'Mentor',
-              content: 'Being part of Guiding Stars has been transformative. The opportunity to guide and inspire the next generation of leaders is incredibly rewarding.',
-              image: '/img/Chongo Lombe.jpg',
-            },
-            {
-              id: '2',
-              name: 'Manuel Mwanza',
-              title: 'Mentor',
-              content: 'I\'ve seen remarkable growth in my mentees. Guiding Stars provides the perfect platform to make a real difference in people\'s careers.',
-              image: '/img/Manuel Mwanza.jpg',
-            },
-            {
-              id: '3',
-              name: 'Racheal Thole',
-              title: 'Mentee',
-              content: 'The mentorship I received through Guiding Stars has been invaluable. My mentor provided guidance that accelerated my professional growth significantly.',
-              image: '/img/Racheal Thole.jpg',
-            },
-          ]);
-        } else {
-          setTestimonials(testimonialList);
-        }
-      })
-      .catch(err => console.error('Failed to load content:', err))
-      .finally(() => setLoading(false));
-  }, []);
+  const [selectedCohort, setSelectedCohort] = useState('cohort2');
+  const data = testimonialsByCohort[selectedCohort as keyof typeof testimonialsByCohort];
 
   return (
     <div className="bg-white overflow-x-hidden">
@@ -102,8 +114,32 @@ const Testimonials = () => {
             Testimonials
           </h1>
           <p className="text-xl md:text-2xl opacity-90">
-            Hear from our mentors and mentees
+            Hear from our mentees across different cohorts
           </p>
+        </div>
+      </section>
+
+      {/* Cohort Tabs */}
+      <section className="py-8 bg-white">
+        <div className="container mx-auto px-6">
+          <div className="flex flex-wrap justify-center gap-4">
+            {Object.entries(testimonialsByCohort).map(([key, cohort]) => (
+              <button
+                key={key}
+                onClick={() => setSelectedCohort(key)}
+                className={`px-6 py-3 rounded-lg font-semibold transition duration-300 ${
+                  selectedCohort === key
+                    ? 'text-white'
+                    : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+                }`}
+                style={{
+                  background: selectedCohort === key ? 'linear-gradient(135deg, #FF9148 0%, #E8722E 100%)' : undefined,
+                }}
+              >
+                {cohort.title.split(' ')[0]} {cohort.title.split(' ')[1]}
+              </button>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -112,63 +148,56 @@ const Testimonials = () => {
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
-              <span style={{ color: '#FF9148' }}>Impact Stories</span>
+              <span style={{ color: '#FF9148' }}>{data.title}</span>
             </h2>
             <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-              {content.testimonials_description || 'Discover how Guiding Stars has transformed the lives and careers of our mentors and mentees.'}
+              Discover the impact Guiding Stars has made on our mentees' lives and careers.
             </p>
           </div>
 
-          {loading ? (
-            <div className="text-center py-12">
-              <p className="text-gray-500">Loading testimonials...</p>
-            </div>
-          ) : testimonials.length === 0 ? (
-            <div className="text-center py-12">
-              <p className="text-gray-500">No testimonials available at this time.</p>
-            </div>
-          ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {testimonials.map((testimonial) => (
-                <div
-                  key={testimonial.id}
-                  className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-300"
-                >
+          <div className="space-y-12">
+            {data.testimonials.map((testimonial, index) => (
+              <div
+                key={testimonial.id}
+                className={`flex flex-col ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-6 items-center`}
+              >
+                {/* Image */}
+                <div className="w-full lg:w-1/2 flex-shrink-0">
                   {testimonial.image && (
                     <img
                       src={testimonial.image}
                       alt={testimonial.name}
-                      className="w-full h-48 object-cover"
+                      className="w-full h-64 lg:h-80 object-cover rounded-lg shadow-lg"
                       loading="lazy"
                     />
                   )}
-                  <div className="p-6">
-                    <div className="flex items-center mb-4">
-                      <div className="flex-1">
-                        <h3 className="text-lg font-bold text-gray-900">
-                          {testimonial.name}
-                        </h3>
-                        <p 
-                          className="text-sm font-semibold"
-                          style={{ color: '#FF9148' }}
-                        >
-                          {testimonial.title}
-                        </p>
-                      </div>
-                    </div>
+                </div>
+
+                {/* Text Content */}
+                <div className="w-full lg:w-1/2">
+                  <div className="bg-white p-8 rounded-lg shadow-lg h-full flex flex-col justify-center">
                     <div className="mb-4 flex text-yellow-400">
                       {[...Array(5)].map((_, i) => (
                         <span key={i}>★</span>
                       ))}
                     </div>
-                    <p className="text-gray-600 leading-relaxed text-sm md:text-base">
+                    <h3 className="text-lg font-bold text-gray-900 mb-1">
+                      {testimonial.name}
+                    </h3>
+                    <p 
+                      className="text-sm font-semibold mb-4"
+                      style={{ color: '#FF9148' }}
+                    >
+                      {testimonial.role}
+                    </p>
+                    <p className="text-gray-600 leading-relaxed text-base">
                       "{testimonial.content}"
                     </p>
                   </div>
                 </div>
-              ))}
-            </div>
-          )}
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -179,7 +208,7 @@ const Testimonials = () => {
             Ready to Join Our Community?
           </h2>
           <p className="text-gray-600 text-lg mb-8 max-w-2xl mx-auto">
-            {content.testimonials_cta || 'Be part of a transformative mentorship experience that will shape your future.'}
+            Be part of a transformative mentorship experience that will shape your future.
           </p>
           <a
             href="/apply"

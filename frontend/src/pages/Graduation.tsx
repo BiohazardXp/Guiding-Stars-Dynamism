@@ -172,57 +172,106 @@ const Graduation = () => {
             {/* Add comments or other meta if needed */}
           </div>
 
-          <div className="text-gray-700 leading-relaxed space-y-4 text-sm md:text-base px-2 md:px-0">
-            <p>
-              {data.content}
-            </p>
-
-            <p>
-              {data.content2}
-            </p>
-
-            <p>
-              {data.content3}
-            </p>
-
-            <p className="italic font-semibold">
-              {data.future}
-            </p>
-
-            <p>
-              Join us as we continue to rise, aiming higher and brighter, in the pursuit of excellence and growth.
-            </p>
-          </div>
-
-          {/* Images Grid */}
-          {selectedCohort === 'cohort1' ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 my-8 md:my-12">
-              <img
-                src={corporateImage3}
-                alt="Corporate Image 3"
-                className="w-full rounded-lg shadow-lg object-cover h-48 md:h-80"
-              />
-              <img
-                src={graduationCohort}
-                alt="Graduation Cohort"
-                className="w-full rounded-lg shadow-lg object-cover h-48 md:h-80"
-              />
-            </div>
-          ) : (
-            <div className="my-8 md:my-12">
-              <h3 className="text-xl md:text-2xl font-bold mb-4 md:mb-6 text-center">Event Gallery</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
-                {data.images && data.images.map((image, index) => (
+          <div className="space-y-12 md:space-y-16">
+            {/* Content 1 with Image */}
+            <div className="flex flex-col lg:flex-row gap-6 md:gap-8 items-center">
+              <div className="w-full lg:w-1/2">
+                <p className="text-gray-700 leading-relaxed text-sm md:text-base">
+                  {data.content}
+                </p>
+              </div>
+              <div className="w-full lg:w-1/2">
+                {selectedCohort === 'cohort1' ? (
                   <img
-                    key={index}
-                    src={image}
-                    alt={`Event Image ${index + 1}`}
-                    className="w-full rounded-lg shadow-lg object-cover h-40 md:h-64 hover:scale-105 transition-transform duration-300"
+                    src={corporateImage3}
+                    alt="Corporate Image"
+                    className="w-full rounded-lg shadow-lg object-cover h-64 md:h-80"
                   />
-                ))}
+                ) : (
+                  data.images && data.images[0] && (
+                    <img
+                      src={data.images[0]}
+                      alt="Event Image 1"
+                      className="w-full rounded-lg shadow-lg object-cover h-64 md:h-80"
+                    />
+                  )
+                )}
               </div>
             </div>
-          )}
+
+            {/* Content 2 with Image (alternating side) */}
+            <div className="flex flex-col lg:flex-row-reverse gap-6 md:gap-8 items-center">
+              <div className="w-full lg:w-1/2">
+                <p className="text-gray-700 leading-relaxed text-sm md:text-base">
+                  {data.content2}
+                </p>
+              </div>
+              <div className="w-full lg:w-1/2">
+                {selectedCohort === 'cohort1' ? (
+                  <img
+                    src={graduationCohort}
+                    alt="Graduation Cohort"
+                    className="w-full rounded-lg shadow-lg object-cover h-64 md:h-80"
+                  />
+                ) : (
+                  data.images && data.images[1] && (
+                    <img
+                      src={data.images[1]}
+                      alt="Event Image 2"
+                      className="w-full rounded-lg shadow-lg object-cover h-64 md:h-80"
+                    />
+                  )
+                )}
+              </div>
+            </div>
+
+            {/* Content 3 with Image (if available) */}
+            {data.content3 && (
+              <div className="flex flex-col lg:flex-row gap-6 md:gap-8 items-center">
+                <div className="w-full lg:w-1/2">
+                  <p className="text-gray-700 leading-relaxed text-sm md:text-base">
+                    {data.content3}
+                  </p>
+                </div>
+                <div className="w-full lg:w-1/2">
+                  {data.images && data.images[2] && (
+                    <img
+                      src={data.images[2]}
+                      alt="Event Image 3"
+                      className="w-full rounded-lg shadow-lg object-cover h-64 md:h-80"
+                    />
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Remaining Images Gallery */}
+            {data.images && data.images.length > 3 && (
+              <div>
+                <h3 className="text-xl md:text-2xl font-bold mb-4 md:mb-6">More Event Highlights</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+                  {data.images.slice(3).map((image, index) => (
+                    <img
+                      key={index}
+                      src={image}
+                      alt={`Event Image ${index + 4}`}
+                      className="w-full rounded-lg shadow-lg object-cover h-40 md:h-64 hover:scale-105 transition-transform duration-300"
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Future Section */}
+            <div className="bg-gradient-to-r from-orange-50 to-orange-100 p-6 md:p-8 rounded-lg border-l-4" style={{ borderColor: '#FF9148' }}>
+              <p className="text-gray-700 leading-relaxed text-sm md:text-base italic font-semibold">
+                {data.future}
+              </p>
+              <p className="text-gray-600 leading-relaxed text-sm md:text-base mt-4">
+                Join us as we continue to rise, aiming higher and brighter, in the pursuit of excellence and growth.
+              </p>
+            </div>
+          </div>
 
           {/* Testimonials Carousel */}
           {data.testimonials && data.testimonials.length > 0 && (
