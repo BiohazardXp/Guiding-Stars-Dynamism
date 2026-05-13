@@ -345,19 +345,13 @@ const Home = () => {
             </span>
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-2xl mx-auto">
             {[
               {
                 img: '/img/Constance Haajila.jpg',
                 name: 'Constance Haajila',
                 quote:
                   'The mentorship has exceeded my expectation, it has taught me to focus and always show up, I am now ready for opportunities.',
-              },
-              {
-                img: '/img/Chongo Lombe.jpg',
-                name: 'Chongo Lombe',
-                quote:
-                  'I cant quantify the personal growth and inspiration gained from the program. It has equipped me with the skills for the corporate world.',
               },
               {
                 img: '/img/Manuel Mwanza.jpg',
@@ -368,9 +362,9 @@ const Home = () => {
             ].map((t, i) => (
               <div
                 key={i}
-                className="bg-white text-gray-800 p-7 md:p-8 rounded-2xl shadow-xl"
+                className="bg-white text-gray-800 p-8 md:p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300"
               >
-                <div className="flex items-center mb-5">
+                <div className="flex items-center mb-6">
                   <img
                     src={t.img}
                     alt={t.name}
@@ -378,9 +372,14 @@ const Home = () => {
                     loading="lazy"
                   />
                   <div>
-                    <h6 className="font-bold text-base md:text-lg">{t.name}</h6>
+                    <h6 className="font-bold text-base md:text-lg text-gray-900">{t.name}</h6>
                     <p className="text-gray-500 text-sm">Student</p>
                   </div>
+                </div>
+                <div className="flex mb-4 text-yellow-400">
+                  {[...Array(5)].map((_, idx) => (
+                    <span key={idx}>★</span>
+                  ))}
                 </div>
                 <p className="italic text-gray-700 leading-relaxed">"{t.quote}"</p>
               </div>

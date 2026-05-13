@@ -54,12 +54,12 @@ const Contact = () => {
                   <div>
                     <h4 className="text-xl font-bold mb-1 text-gray-800">Email</h4>
                     <a
-                      href="mailto:guidingstars2024@gmail.com"
+                      href="mailto:info@guidingstarszm.com"
                       className="text-gray-600 transition"
                       onMouseEnter={(e) => (e.currentTarget.style.color = '#FF9148')}
                       onMouseLeave={(e) => (e.currentTarget.style.color = '')}
                     >
-                      guidingstars2024@gmail.com
+                      info@guidingstarszm.com
                     </a>
                   </div>
                 </div>
