@@ -1,9 +1,17 @@
 // src/pages/Team.tsx
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
-// Import images (use root-relative public paths)
-const topBanner = "/img/Top-Bunner-1.jpg";
+// Hero carousel images
+const heroImages = [
+  '/img/Top-Bunner-1.jpg',
+  '/img/corporate image.jpeg',
+  '/img/guiding stars team.jpg',
+  '/img/guiding stars event.jpg',
+];
 
 // Team member images (use root-relative public paths)
 const twaambo = "/img/TEAM/Twaambo Chisamba Kayombo.png";
@@ -54,24 +62,86 @@ const teamMembers = [
 
 const Team = () => {
   const [flipped, setFlipped] = useState<number | null>(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  // Auto-rotate carousel every 5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const handlePrevImage = () => {
+    setCurrentImageIndex((prev) => (prev - 1 + heroImages.length) % heroImages.length);
+  };
+
+  const handleNextImage = () => {
+    setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
+  };
 
   const toggleFlip = (index: number) => {
     setFlipped(flipped === index ? null : index);
   };
 
   return (
-    <div className="bg-white min-h-screen">
-      {/* Hero / Banner */}
+    <div className="bg-white overflow-x-hidden">
+      <Navbar />
+
+      {/* Hero Section with Carousel */}
       <section className="relative">
-        <img
-          src={topBanner}
-          alt="Team Banner"
-          className="w-full h-96 object-cover"
-        />
-        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="text-center text-white px-4">
-            <h6 className="text-xl uppercase tracking-widest mb-3">Ignite Success</h6>
-            <h1 className="text-5xl md:text-6xl font-bold">TEAM</h1>
+        {/* Carousel Images */}
+        <div className="relative overflow-hidden">
+          {heroImages.map((image, index) => (
+            <img
+              key={index}
+              src={image}
+              alt={`Hero Banner ${index + 1}`}
+              className={`w-full h-[60vh] md:h-[80vh] object-cover brightness-75 transition-opacity duration-1000 ${
+                index === currentImageIndex ? 'opacity-100' : 'opacity-0 absolute'
+              }`}
+              loading="lazy"
+            />
+          ))}
+        </div>
+
+        {/* Navigation Buttons */}
+        <button
+          onClick={handlePrevImage}
+          className="absolute left-4 top-1/2 transform -translate-y-1/2 z-20 bg-white bg-opacity-50 hover:bg-opacity-75 transition rounded-full p-3 text-gray-900"
+          aria-label="Previous image"
+        >
+          <FontAwesomeIcon icon={faChevronLeft} size="lg" />
+        </button>
+        <button
+          onClick={handleNextImage}
+          className="absolute right-4 top-1/2 transform -translate-y-1/2 z-20 bg-white bg-opacity-50 hover:bg-opacity-75 transition rounded-full p-3 text-gray-900"
+          aria-label="Next image"
+        >
+          <FontAwesomeIcon icon={faChevronRight} size="lg" />
+        </button>
+
+        {/* Carousel Indicators */}
+        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-20 flex gap-2">
+          {heroImages.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentImageIndex(index)}
+              className={`w-3 h-3 rounded-full transition ${
+                index === currentImageIndex ? 'bg-white' : 'bg-white bg-opacity-50 hover:bg-opacity-75'
+              }`}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
+        </div>
+
+        {/* Content Overlay */}
+        <div className="absolute inset-0 flex items-center justify-center text-center text-white px-4">
+          <div className="w-full max-w-4xl">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 md:mb-8 leading-tight">
+              MEET OUR TEAM
+            </h1>
+            <p className="text-base md:text-xl text-gray-100">Dedicated professionals committed to transforming lives through mentorship</p>
           </div>
         </div>
       </section>

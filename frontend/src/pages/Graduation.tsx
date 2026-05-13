@@ -1,13 +1,17 @@
-//import Navbar from '../components/Navbar';
-//import React from "react";
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
-// No imports needed for public/ images — just use string paths starting with "/"
-const topBanner = "/img/Top-Bunner-1.jpg";
-const corporateImage3 = "/img/corporate image 3.jpeg";
-const graduationCohort = "/img/graduation cohort.jpeg";
+// Hero carousel images
+const heroImages = [
+  '/img/Top-Bunner-1.jpg',
+  '/img/corporate image.jpeg',
+  '/img/guiding stars team.jpg',
+  '/img/guiding stars event.jpg',
+];
+
 
 // Graduation data
 const graduations = {
@@ -18,7 +22,7 @@ const graduations = {
     content2: "Mr. Brian J. Silungwe MZIM, Council Secretary of the Zambia Institute of Marketing-ZIM, served as the Guest of Honor, emphasizing the importance of lifelong learning and self-belief in his speech. Ms. Twaambo Chisamba Kayombo, the founder and CEO, also outlined the program's future goals of expansion, innovation, and impact; stating that mentorship should be accessible to all, regardless of background or geography, so that upcoming marketers and business students can reach their full potential, nurturing a global network of inspired and capable individuals.",
     content3: "The event concluded with the presentation of certificates and special packages to the graduates of Cohort One.",
     future: "Cohort Two is anticipated to be larger and more impactful, continuing the program's commitment to advancing nonstop learning, personal growth, and professional development.",
-    images: []
+    images: ['/img/corporate image.jpeg', '/img/guiding stars team.jpg']
   },
   cohort2: {
     title: "Cohort Two Celebrations & Impact",
@@ -113,27 +117,83 @@ const graduations = {
 // Rest of your code stays the same//
 const Graduation = () => {
   const [selectedCohort, setSelectedCohort] = useState('cohort1');
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const data = graduations[selectedCohort as keyof typeof graduations];
+
+  // Auto-rotate carousel every 5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const handlePrevImage = () => {
+    setCurrentImageIndex((prev) => (prev - 1 + heroImages.length) % heroImages.length);
+  };
+
+  const handleNextImage = () => {
+    setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
+  };
   
   return (
-    <div className="bg-white min-h-screen">
+    <div className="bg-white overflow-x-hidden">
       <Navbar />
 
-      {/* Hero / Banner */}
+      {/* Hero Section with Carousel */}
       <section className="relative">
-        <img
-          src={topBanner}
-          alt="Graduation Banner"
-          className="w-full h-96 object-cover"
-        />
-        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40">
-          <div className="text-center text-white px-4">
-            <h6 className="text-xl uppercase tracking-widest mb-3 animate__animated animate__fadeInDown">
-              Ignite Success
-            </h6>
-            <h1 className="text-5xl md:text-6xl font-bold mb-4 animate__animated animate__fadeInDown">
-              {data.title}
+        {/* Carousel Images */}
+        <div className="relative overflow-hidden">
+          {heroImages.map((image, index) => (
+            <img
+              key={index}
+              src={image}
+              alt={`Hero Banner ${index + 1}`}
+              className={`w-full h-[60vh] md:h-[80vh] object-cover brightness-75 transition-opacity duration-1000 ${
+                index === currentImageIndex ? 'opacity-100' : 'opacity-0 absolute'
+              }`}
+              loading="lazy"
+            />
+          ))}
+        </div>
+
+        {/* Navigation Buttons */}
+        <button
+          onClick={handlePrevImage}
+          className="absolute left-4 top-1/2 transform -translate-y-1/2 z-20 bg-white bg-opacity-50 hover:bg-opacity-75 transition rounded-full p-3 text-gray-900"
+          aria-label="Previous image"
+        >
+          <FontAwesomeIcon icon={faChevronLeft} size="lg" />
+        </button>
+        <button
+          onClick={handleNextImage}
+          className="absolute right-4 top-1/2 transform -translate-y-1/2 z-20 bg-white bg-opacity-50 hover:bg-opacity-75 transition rounded-full p-3 text-gray-900"
+          aria-label="Next image"
+        >
+          <FontAwesomeIcon icon={faChevronRight} size="lg" />
+        </button>
+
+        {/* Carousel Indicators */}
+        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-20 flex gap-2">
+          {heroImages.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentImageIndex(index)}
+              className={`w-3 h-3 rounded-full transition ${
+                index === currentImageIndex ? 'bg-white' : 'bg-white bg-opacity-50 hover:bg-opacity-75'
+              }`}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
+        </div>
+
+        {/* Content Overlay */}
+        <div className="absolute inset-0 flex items-center justify-center text-center text-white px-4">
+          <div className="w-full max-w-4xl">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 md:mb-8 leading-tight">
+              EVENTS & CELEBRATIONS
             </h1>
+            <p className="text-base md:text-xl text-gray-100">Celebrating milestones and transforming lives together</p>
           </div>
         </div>
       </section>
@@ -173,20 +233,12 @@ const Graduation = () => {
                 </p>
               </div>
               <div className="w-full lg:w-1/2">
-                {selectedCohort === 'cohort1' ? (
+                {data.images && data.images[0] && (
                   <img
-                    src={corporateImage3}
-                    alt="Corporate Image"
+                    src={data.images[0]}
+                    alt="Event Image 1"
                     className="w-full rounded-lg shadow-lg object-cover h-64 md:h-80"
                   />
-                ) : (
-                  data.images && data.images[0] && (
-                    <img
-                      src={data.images[0]}
-                      alt="Event Image 1"
-                      className="w-full rounded-lg shadow-lg object-cover h-64 md:h-80"
-                    />
-                  )
                 )}
               </div>
             </div>
@@ -199,43 +251,33 @@ const Graduation = () => {
                 </p>
               </div>
               <div className="w-full lg:w-1/2">
-                {selectedCohort === 'cohort1' ? (
+                {data.images && data.images[1] && (
                   <img
-                    src={graduationCohort}
-                    alt="Graduation Cohort"
+                    src={data.images[1]}
+                    alt="Event Image 2"
                     className="w-full rounded-lg shadow-lg object-cover h-64 md:h-80"
                   />
-                ) : (
-                  data.images && data.images[1] && (
-                    <img
-                      src={data.images[1]}
-                      alt="Event Image 2"
-                      className="w-full rounded-lg shadow-lg object-cover h-64 md:h-80"
-                    />
-                  )
                 )}
               </div>
             </div>
 
-            {/* Content 3 with Image (if available) */}
-            {data.content3 && (
-              <div className="flex flex-col lg:flex-row gap-6 md:gap-8 items-center">
-                <div className="w-full lg:w-1/2">
-                  <p className="text-gray-700 leading-relaxed text-sm md:text-base">
-                    {data.content3}
-                  </p>
-                </div>
-                <div className="w-full lg:w-1/2">
-                  {data.images && data.images[2] && (
-                    <img
-                      src={data.images[2]}
-                      alt="Event Image 3"
-                      className="w-full rounded-lg shadow-lg object-cover h-64 md:h-80"
-                    />
-                  )}
-                </div>
+            {/* Content 3 with Image (alternating side) */}
+            <div className="flex flex-col lg:flex-row gap-6 md:gap-8 items-center">
+              <div className="w-full lg:w-1/2">
+                <p className="text-gray-700 leading-relaxed text-sm md:text-base">
+                  {data.content3}
+                </p>
               </div>
-            )}
+              <div className="w-full lg:w-1/2">
+                {data.images && data.images[2] && (
+                  <img
+                    src={data.images[2]}
+                    alt="Event Image 3"
+                    className="w-full rounded-lg shadow-lg object-cover h-64 md:h-80"
+                  />
+                )}
+              </div>
+            </div>
 
             {/* Remaining Images Gallery */}
             {data.images && data.images.length > 3 && (

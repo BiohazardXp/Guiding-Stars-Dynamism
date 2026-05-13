@@ -355,7 +355,7 @@ const Home = () => {
               },
               {
                 img: '/img/Manuel Mwanza.jpg',
-                name: 'Manuel Mwanza',
+                name: 'Manuel Mwaala',
                 quote:
                   'My journey has been about self-discovery resulting into heightened productivity and confidence in my leadership abilities.',
               },

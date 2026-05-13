@@ -1,6 +1,16 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+
+// Hero carousel images
+const heroImages = [
+  '/img/Top-Bunner-1.jpg',
+  '/img/corporate image.jpeg',
+  '/img/guiding stars team.jpg',
+  '/img/guiding stars event.jpg',
+];
 
 // Testimonials organized by cohort with images
 const testimonialsByCohort = {
@@ -108,34 +118,84 @@ const testimonialsByCohort = {
 const Testimonials = () => {
   const [selectedCohort, setSelectedCohort] = useState('cohort2');
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const data = testimonialsByCohort[selectedCohort as keyof typeof testimonialsByCohort];
+
+  // Auto-rotate carousel every 5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const handlePrevImage = () => {
+    setCurrentImageIndex((prev) => (prev - 1 + heroImages.length) % heroImages.length);
+  };
+
+  const handleNextImage = () => {
+    setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
+  };
 
   return (
     <div className="bg-white overflow-x-hidden">
       <Navbar />
 
-      {/* Hero Section */}
-      <section 
-        className="relative py-20 md:py-32 flex items-center justify-center"
-        style={{
-          backgroundImage: 'url(/img/Guiding star background image.jpg)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
-      >
-        <div 
-          className="absolute inset-0"
-          style={{
-            backgroundColor: 'rgba(0, 0, 0, 0.4)',
-          }}
-        />
-        <div className="relative z-10 text-center text-white px-4">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
-            Testimonials
-          </h1>
-          <p className="text-xl md:text-2xl opacity-90">
-            Hear from our mentees across different cohorts
-          </p>
+      {/* Hero Section with Carousel */}
+      <section className="relative">
+        {/* Carousel Images */}
+        <div className="relative overflow-hidden">
+          {heroImages.map((image, index) => (
+            <img
+              key={index}
+              src={image}
+              alt={`Hero Banner ${index + 1}`}
+              className={`w-full h-[60vh] md:h-[80vh] object-cover brightness-75 transition-opacity duration-1000 ${
+                index === currentImageIndex ? 'opacity-100' : 'opacity-0 absolute'
+              }`}
+              loading="lazy"
+            />
+          ))}
+        </div>
+
+        {/* Navigation Buttons */}
+        <button
+          onClick={handlePrevImage}
+          className="absolute left-4 top-1/2 transform -translate-y-1/2 z-20 bg-white bg-opacity-50 hover:bg-opacity-75 transition rounded-full p-3 text-gray-900"
+          aria-label="Previous image"
+        >
+          <FontAwesomeIcon icon={faChevronLeft} size="lg" />
+        </button>
+        <button
+          onClick={handleNextImage}
+          className="absolute right-4 top-1/2 transform -translate-y-1/2 z-20 bg-white bg-opacity-50 hover:bg-opacity-75 transition rounded-full p-3 text-gray-900"
+          aria-label="Next image"
+        >
+          <FontAwesomeIcon icon={faChevronRight} size="lg" />
+        </button>
+
+        {/* Carousel Indicators */}
+        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-20 flex gap-2">
+          {heroImages.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentImageIndex(index)}
+              className={`w-3 h-3 rounded-full transition ${
+                index === currentImageIndex ? 'bg-white' : 'bg-white bg-opacity-50 hover:bg-opacity-75'
+              }`}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
+        </div>
+
+        {/* Content Overlay */}
+        <div className="absolute inset-0 flex items-center justify-center text-center text-white px-4">
+          <div className="w-full max-w-4xl">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 md:mb-8 leading-tight">
+              STUDENT TESTIMONIALS
+            </h1>
+            <p className="text-base md:text-xl text-gray-100">Hear from our mentees about their transformational journey</p>
+          </div>
         </div>
       </section>
 
