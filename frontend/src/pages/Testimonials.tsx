@@ -2,8 +2,6 @@ import { useState } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
-const topBanner = "/img/Top-Bunner-1.jpg";
-
 // Testimonials organized by cohort with images
 const testimonialsByCohort = {
   cohort2: {
@@ -49,6 +47,27 @@ const testimonialsByCohort = {
         content: 'Through Guiding Stars, I have discovered my potential and gained the confidence to pursue my dreams. The mentorship has been life-changing.',
         image: '/img/Testimonials/cohort 3/WhatsApp Image 2026-04-30 at 11.48.22.jpeg',
       },
+      {
+        id: '2',
+        name: 'Testimonial 2',
+        role: 'Mentee',
+        content: 'The guidance and support I received has truly transformed my perspective and career trajectory.',
+        image: '/img/Testimonials/cohort 3/WhatsApp Image 2026-05-12 at 12.38.25.jpeg',
+      },
+      {
+        id: '3',
+        name: 'Testimonial 3',
+        role: 'Mentee',
+        content: 'Being part of this cohort has connected me with amazing individuals and opened doors I never expected.',
+        image: '/img/Testimonials/cohort 3/WhatsApp Image 2026-05-12 at 12.38.26 (1).jpeg',
+      },
+      {
+        id: '4',
+        name: 'Testimonial 4',
+        role: 'Mentee',
+        content: 'The mentorship program has empowered me to take charge of my future and lead with purpose.',
+        image: '/img/Testimonials/cohort 3/WhatsApp Image 2026-05-12 at 12.38.26.jpeg',
+      },
     ]
   },
   cohort4: {
@@ -88,6 +107,7 @@ const testimonialsByCohort = {
 
 const Testimonials = () => {
   const [selectedCohort, setSelectedCohort] = useState('cohort2');
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const data = testimonialsByCohort[selectedCohort as keyof typeof testimonialsByCohort];
 
   return (
@@ -167,8 +187,9 @@ const Testimonials = () => {
                     <img
                       src={testimonial.image}
                       alt={testimonial.name}
-                      className="w-full h-64 lg:h-80 object-cover rounded-lg shadow-lg"
+                      className="w-full h-64 lg:h-80 object-cover rounded-lg shadow-lg cursor-pointer hover:opacity-80 transition-opacity duration-300"
                       loading="lazy"
+                      onClick={() => setSelectedImage(testimonial.image)}
                     />
                   )}
                 </div>
@@ -218,6 +239,30 @@ const Testimonials = () => {
           </a>
         </div>
       </section>
+
+      {/* Image Modal */}
+      {selectedImage && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4"
+          onClick={() => setSelectedImage(null)}
+        >
+          <div className="relative max-w-4xl max-h-[90vh] w-full">
+            <img
+              src={selectedImage}
+              alt="Full View"
+              className="w-full h-full object-contain rounded-lg"
+              onClick={(e) => e.stopPropagation()}
+            />
+            <button
+              onClick={() => setSelectedImage(null)}
+              className="absolute top-4 right-4 bg-white rounded-full p-2 hover:bg-gray-200 transition text-2xl font-bold text-gray-800"
+              aria-label="Close"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+      )}
 
       <Footer />
     </div>

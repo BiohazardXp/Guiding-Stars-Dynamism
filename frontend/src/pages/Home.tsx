@@ -85,7 +85,7 @@ const Home = () => {
             {/* Desktop images */}
             <div className="hidden md:grid grid-cols-2 gap-6">
               <img
-                src="/img/_MG_6199-1.jpg"
+                src="/img/IMG_2701.JPG.jpeg"
                 alt="Guiding Stars students"
                 className="rounded-xl shadow-lg w-full h-64 object-cover"
                 loading="lazy"

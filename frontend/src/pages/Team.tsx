@@ -9,7 +9,6 @@ const topBanner = "/img/Top-Bunner-1.jpg";
 const twaambo = "/img/TEAM/Twaambo Chisamba Kayombo.png";
 const lisa = "/img/TEAM/Lisa T Chansa.png";
 const nangoma = "/img/TEAM/Nangoma Mwanamoonte.png";
-const grace = "/img/TEAM/Ms. Grace Nshimbi.jpeg";
 const tabitha = "/img/TEAM/Tabitha Muzumara.png";
 const edward = "/img/TEAM/Edward Kafusa.png";
 const lwanga = "/img/TEAM/Lwanga C Luchembe.png";

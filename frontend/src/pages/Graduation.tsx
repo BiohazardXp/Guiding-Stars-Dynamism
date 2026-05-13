@@ -8,9 +8,6 @@ import { useState } from 'react';
 const topBanner = "/img/Top-Bunner-1.jpg";
 const corporateImage3 = "/img/corporate image 3.jpeg";
 const graduationCohort = "/img/graduation cohort.jpeg";
-const constanceHaajila = "/img/Constance Haajila.jpg";
-const chongoLombe = "/img/Chongo Lombe.jpg";
-const manuelMwanza = "/img/Manuel Mwanza.jpg";
 
 // Graduation data
 const graduations = {
@@ -21,11 +18,6 @@ const graduations = {
     content2: "Mr. Brian J. Silungwe MZIM, Council Secretary of the Zambia Institute of Marketing-ZIM, served as the Guest of Honor, emphasizing the importance of lifelong learning and self-belief in his speech. Ms. Twaambo Chisamba Kayombo, the founder and CEO, also outlined the program's future goals of expansion, innovation, and impact; stating that mentorship should be accessible to all, regardless of background or geography, so that upcoming marketers and business students can reach their full potential, nurturing a global network of inspired and capable individuals.",
     content3: "The event concluded with the presentation of certificates and special packages to the graduates of Cohort One.",
     future: "Cohort Two is anticipated to be larger and more impactful, continuing the program's commitment to advancing nonstop learning, personal growth, and professional development.",
-    testimonials: [
-      { name: "Constance Haajila", role: "Student", img: constanceHaajila, quote: "The mentorship has exceeded my expectation, it has taught me to focus and always show up, I am now ready for opportunities." },
-      { name: "Chongo Lombe", role: "Student", img: chongoLombe, quote: "I can't quantify the personal growth and inspiration gained from the program. It has equipped me with the skills for the corporate world." },
-      { name: "Manuel Mwanza", role: "Student", img: manuelMwanza, quote: "My journey has been about self-discovery resulting into heightened productivity and confidence in my leadership abilities." }
-    ],
     images: []
   },
   cohort2: {
@@ -273,32 +265,6 @@ const Graduation = () => {
             </div>
           </div>
 
-          {/* Testimonials Carousel */}
-          {data.testimonials && data.testimonials.length > 0 && (
-            <section className="bg-gray-900 text-white py-8 md:py-12 rounded-xl my-8 md:my-12">
-              <div className="container mx-auto px-4">
-                <h3 className="text-2xl md:text-3xl font-bold text-center mb-6 md:mb-10">What Our Graduates Say</h3>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
-                  {/* Custom testimonials rendering */}
-                  {data.testimonials.map((testimonial, index) => (
-                    <div key={index} className="bg-white text-gray-800 p-4 md:p-6 rounded-lg shadow-lg">
-                      <img
-                        src={testimonial.img}
-                        alt={testimonial.name}
-                        className="w-16 md:w-20 h-24 md:h-28 object-cover rounded-full mx-auto mb-3 md:mb-4"
-                      />
-                      <h4 className="text-lg md:text-xl font-bold text-center mb-1 md:mb-2">{testimonial.name}</h4>
-                      <p className="text-xs md:text-sm text-gray-500 text-center mb-3 md:mb-4">{testimonial.role}</p>
-                      <p className="italic text-center text-sm md:text-base">
-                        "{testimonial.quote}"
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </section>
-          )}
         </div>
       </div>
 

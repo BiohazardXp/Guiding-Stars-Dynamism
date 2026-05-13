@@ -10,7 +10,6 @@ import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Home from './pages/Home';
 import About from './pages/About';
-import Activate from './pages/Activate';
 import ApplyPage from './pages/ApplyPage';
 import Contact from './pages/Contact';
 import Graduation from './pages/Graduation';
